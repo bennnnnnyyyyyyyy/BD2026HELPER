@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Dialer | Ben's DME Data Hub</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Geist:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        @keyframes pulse-pip {
+
+            0%,
+            100% {
+                box-shadow: 0 0 4px rgba(0, 112, 255, 0.6);
+            }
+
+            50% {
+                box-shadow: 0 0 8px rgba(0, 112, 255, 0.9);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        :root {
+            --void: #0B0E14;
+            --void-light: #141820;
+            --void-lighter: #1F2937;
+            --steel: #9CA3AF;
+            --steel-dark: #6B7280;
+            --electric-blue: #0070FF;
+            --electric-blue-hover: #0057CC;
+            --neon-mint: #00D9A3;
+            --neon-red: #FF4444;
+            --neon-amber: #FFB82E;
+            --text-primary: #E5E7EB;
+            --text-secondary: #A3ACBE;
+            --border-color: #1F2937;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--void);
+            color: var(--text-primary);
+            min-height: 100vh;
+            background-image:
+                linear-gradient(0deg, transparent 24%, rgba(31, 41, 55, 0.5) 25%, rgba(31, 41, 55, 0.5) 26%, transparent 27%, transparent 74%, rgba(31, 41, 55, 0.5) 75%, rgba(31, 41, 55, 0.5) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(31, 41, 55, 0.5) 25%, rgba(31, 41, 55, 0.5) 26%, transparent 27%, transparent 74%, rgba(31, 41, 55, 0.5) 75%, rgba(31, 41, 55, 0.5) 76%, transparent 77%, transparent);
+            background-size: 48px 48px;
+            animation: fadeIn 0.6s ease-out;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--electric-blue);
+            font-family: 'JetBrains Mono', monospace;
+            text-shadow: 0 0 20px rgba(0, 112, 255, 0.3);
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            color: var(--electric-blue);
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 12px 24px;
+            background: var(--void-light);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--electric-blue);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            padding: 80px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: var(--void-light);
+        }
+
+        .upload-zone:hover,
+        .upload-zone.dragover {
+            border-color: var(--electric-blue);
+            background: rgba(0, 112, 255, 0.1);
+            box-shadow: 0 0 30px rgba(0, 112, 255, 0.2);
+        }
+
+        .upload-zone h2 {
+            margin-bottom: 10px;
+            color: var(--electric-blue);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .upload-zone p {
+            color: var(--text-secondary);
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        /* Column Mapper */
+        .mapper {
+            display: none;
+            background: var(--void-light);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .mapper.show {
+            display: block;
+        }
+
+        .mapper h3 {
+            margin-bottom: 20px;
+            color: var(--electric-blue);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .mapper-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .mapper-item label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .mapper-item select {
+            width: 100%;
+            padding: 12px;
+            background: var(--void);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .mapper-item select:focus {
+            outline: none;
+            border-color: var(--electric-blue);
+        }
+
+        .btn {
+            background: var(--electric-blue);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            background: var(--electric-blue-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 112, 255, 0.3);
+        }
+
+        .btn-success {
+            background: var(--neon-mint);
+            color: #0B0E14;
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 8px 20px rgba(0, 217, 163, 0.3);
+        }
+
+        /* Dialer Panel */
+        .dialer-panel {
+            display: none;
+            gap: 30px;
+        }
+
+        .dialer-panel.show {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+        }
+
+        /* Lead Card */
+        .lead-card {
+            background: var(--void-light);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 35px;
+            position: relative;
+        }
+
+        .lead-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--electric-blue), var(--neon-mint));
+            border-radius: 16px 16px 0 0;
+        }
+
+        .lead-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+        }
+
+        .lead-name {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .lead-company {
+            color: var(--neon-mint);
+            font-size: 1.2rem;
+            margin-top: 5px;
+        }
+
+        .lead-badge {
+            padding: 8px 16px;
+            background: var(--void);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .lead-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin: 30px 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .comments-history {
+            grid-column: 1 / -1;
+            background: var(--void);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+            border: 1px solid var(--border-color);
+            margin-top: 10px;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        .detail-item label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+        }
+
+        .detail-item span {
+            font-size: 1.1rem;
+        }
+
+        .phone-display {
+            background: var(--void);
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        .phone-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--neon-mint);
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px rgba(0, 217, 163, 0.3);
+        }
+
+        .call-btn {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.3rem;
+            margin-top: 15px;
+            background: linear-gradient(135deg, var(--neon-mint), #00B88A);
+            border: none;
+            border-radius: 12px;
+            color: #0B0E14;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .call-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 217, 163, 0.4);
+        }
+
+        /* Disposition Panel */
+        .disp-panel {
+            background: var(--void-light);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        .disp-panel h3 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .disp-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .disp-btn {
+            padding: 16px;
+            background: var(--void);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            font-family: inherit;
+        }
+
+        .disp-btn:hover {
+            border-color: var(--electric-blue);
+            background: var(--void-lighter);
+        }
+
+        .disp-btn.success {
+            border-color: var(--neon-mint);
+            color: var(--neon-mint);
+        }
+
+        .disp-btn.highlight {
+            background: var(--electric-blue);
+            color: white;
+            border-color: var(--electric-blue);
+        }
+
+        .disp-btn.custom {
+            background: var(--neon-amber);
+            color: #0B0E14;
+            border-color: var(--neon-amber);
+            font-weight: bold;
+        }
+
+        .nav-btns {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .nav-btns button {
+            flex: 1;
+        }
+
+        .btn-secondary {
+            background: var(--void-lighter);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--electric-blue);
+        }
+
+        .enrich-btn {
+            margin-top: 10px;
+            padding: 10px 16px;
+            background: var(--neon-amber);
+            color: #0B0E14;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .enrich-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .export-bar {
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--void-light);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+
+        .export-bar.show {
+            display: flex;
+        }
+
+        .progress-text {
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .notes-area {
+            margin-top: 20px;
+        }
+
+        .notes-area textarea {
+            width: 100%;
+            height: 80px;
+            background: var(--void);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            padding: 12px;
+            font-family: inherit;
+            resize: none;
+        }
+
+        .notes-area textarea:focus {
+            outline: none;
+            border-color: var(--electric-blue);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <a href="homepage.html" class="back-link">← Back to Hub</a>
+                <div class="logo">📞 POWER DIALER</div>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="statTotal">0</div>
+                    <div class="stat-label">Total</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="statCalled">0</div>
+                    <div class="stat-label">Called</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="statConnected">0</div>
+                    <div class="stat-label">Connected</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="upload-zone" id="uploadZone">
+            <h2>📂 DROP CSV HERE</h2>
+            <p>or click to browse</p>
+            <input type="file" id="fileInput" accept=".csv">
+        </div>
+
+        <div class="mapper" id="mapper">
+            <h3>🔗 MAP YOUR COLUMNS</h3>
+            <div class="mapper-grid">
+                <div class="mapper-item">
+                    <label>Phone Number</label>
+                    <select id="mapPhone"></select>
+                </div>
+                <div class="mapper-item">
+                    <label>Name / Contact</label>
+                    <select id="mapName"></select>
+                </div>
+                <div class="mapper-item">
+                    <label>Company</label>
+                    <select id="mapCompany"></select>
+                </div>
+                <div class="mapper-item">
+                    <label>Comments (History)</label>
+                    <select id="mapComments"></select>
+                </div>
+            </div>
+            <div style="margin-top: 25px; text-align: right;">
+                <button class="btn" id="startDialing">START DIALING →</button>
+            </div>
+        </div>
+
+        <div class="dialer-panel" id="dialerPanel">
+            <div class="lead-card">
+                <div class="lead-header">
+                    <div>
+                        <div class="lead-name" id="leadName">Loading...</div>
+                        <div class="lead-company" id="leadCompany">Company Name</div>
+                    </div>
+                    <div class="lead-badge" id="leadIndex">1 / 100</div>
+                </div>
+
+                <div class="lead-details">
+                    <div class="detail-item">
+                        <label>State</label>
+                        <span id="leadState">--</span>
+                    </div>
+                    <div class="detail-item" style="grid-column: 1 / -1;">
+                        <label>Comment History</label>
+                        <div class="comments-history" id="leadComments">--</div>
+                    </div>
+                </div>
+
+                <div class="phone-display">
+                    <div class="phone-number" id="leadPhone">555-555-5555</div>
+                </div>
+
+                <button class="call-btn" id="callBtn">📞 CALL NOW</button>
+            </div>
+
+            <div class="disp-panel">
+                <h3>HOW DID IT GO?</h3>
+                <div class="disp-grid">
+                    <div class="disp-grid">
+                        <button class="disp-btn" data-status="VM">📼 VM (Voicemail)</button>
+                        <button class="disp-btn" data-status="GK">🛡️ GK (Gatekeeper)</button>
+                        <button class="disp-btn" data-status="NA">🚫 NA (No Answer)</button>
+                        <button class="disp-btn" data-status="WN">❌ WN (Wrong Number)</button>
+                        <button class="disp-btn custom" data-status="Custom">📝 Custom Note</button>
+                    </div>
+
+                    <div class="notes-area">
+                        <textarea id="notesInput" placeholder="Add notes..."></textarea>
+                    </div>
+
+                    <div class="nav-btns">
+                        <button class="btn btn-secondary" id="prevBtn">← PREV</button>
+                        <button class="btn" id="nextBtn">NEXT →</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="export-bar" id="exportBar">
+                <span class="progress-text" id="progressText">0 / 100 completed</span>
+                <button class="btn btn-success" id="exportBtn">📥 EXPORT CSV</button>
+            </div>
+        </div>
+
+        <script>
+            let csvData = [];
+            let headers = [];
+            let currentIndex = 0;
+
+            let columnMap = { phone: 0, name: 1, company: 2, comments: -1 };
+            let stats = { total: 0, called: 0, connected: 0 };
+
+
+            const uploadZone = document.getElementById('uploadZone');
+            const fileInput = document.getElementById('fileInput');
+            const mapper = document.getElementById('mapper');
+            const dialerPanel = document.getElementById('dialerPanel');
+            const exportBar = document.getElementById('exportBar');
+
+            uploadZone.addEventListener('click', () => fileInput.click());
+            uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+            uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+            uploadZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadZone.classList.remove('dragover');
+                if (e.dataTransfer.files[0]) parseCSV(e.dataTransfer.files[0]);
+            });
+            fileInput.addEventListener('change', (e) => { if (e.target.files[0]) parseCSV(e.target.files[0]); });
+
+            function parseCSV(file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const text = e.target.result;
+                    const rows = [];
+                    let currentRow = [];
+                    let currentCell = '';
+                    let insideQuotes = false;
+
+                    // Robust CSV Parsing (Handle newlines within quotes)
+                    for (let i = 0; i < text.length; i++) {
+                        const char = text[i];
+                        const nextChar = text[i + 1];
+
+                        if (char === '"') {
+                            if (insideQuotes && nextChar === '"') {
+                                currentCell += '"';
+                                i++; // skip escaped quote
+                            } else {
+                                insideQuotes = !insideQuotes;
+                            }
+                        } else if (char === ',' && !insideQuotes) {
+                            currentRow.push(currentCell.trim());
+                            currentCell = '';
+                        } else if ((char === '\r' || char === '\n') && !insideQuotes) {
+                            if (char === '\r' && nextChar === '\n') i++; // handle CRLF
+                            if (currentRow.length > 0 || currentCell) {
+                                currentRow.push(currentCell.trim());
+                                rows.push(currentRow);
+                            }
+                            currentRow = [];
+                            currentCell = '';
+                        } else {
+                            currentCell += char;
+                        }
+                    }
+                    // Push last row if exists
+                    if (currentCell || currentRow.length > 0) {
+                        currentRow.push(currentCell.trim());
+                        rows.push(currentRow);
+                    }
+
+                    // Filter out completely empty rows
+                    const validRows = rows.filter(r => r.length > 0 && r.some(c => c));
+                    if (validRows.length === 0) return alert('CSV appears to be empty or invalid.');
+
+                    headers = validRows[0].map(h => h.replace(/^"|"$/g, '').trim()); // Clean headers
+
+                    csvData = validRows.slice(1).map((values, idx) => {
+                        // Create object with headers as keys
+                        const rowObj = {
+                            _index: idx,
+                            _disposition: '',
+                            _notes: '',
+                            _enriched: {}
+                        };
+                        headers.forEach((h, i) => {
+                            rowObj[h] = values[i] || '';
+                        });
+                        return rowObj;
+                    });
+
+                    stats.total = csvData.length;
+                    updateStats();
+                    showMapper();
+                };
+                reader.readAsText(file);
+            }
+
+            function showMapper() {
+                uploadZone.style.display = 'none';
+                mapper.classList.add('show');
+
+                // Priority Lists for Auto-Mapping
+                const mappingRules = {
+                    'mapPhone': { candidates: ['AuthPhone', 'OfficePhone', 'Phone', 'Mobile', 'Cell'], avoid: [] },
+                    'mapName': { candidates: ['AuthOfficialName', 'Opener', 'Name', 'Contact'], avoid: ['DUP'] },
+                    'mapCompany': { candidates: ['Legalbusinessname', 'Company', 'Organization', 'Business'], avoid: [] },
+                    'mapNPI': { candidates: ['NPI', 'NPI Number'], avoid: [] }
+                };
+
+                const findBestMatch = (candidates, avoidList) => {
+                    // 1. Exact case-insensitive match
+                    for (const c of candidates) {
+                        const idx = headers.findIndex(h => h.toLowerCase() === c.toLowerCase());
+                        if (idx >= 0) return idx;
+                    }
+                    // 2. Partial match (excluding avoids)
+                    for (const c of candidates) {
+                        const idx = headers.findIndex(h => {
+                            const val = h.toLowerCase();
+                            return val.includes(c.toLowerCase()) && !avoidList.some(a => val.includes(a.toLowerCase()));
+                        });
+                        if (idx >= 0) return idx;
+                    }
+                    return -1;
+                };
+
+                Object.entries(mappingRules).forEach(([elementId, rule]) => {
+                    const select = document.getElementById(elementId);
+                    select.innerHTML = '<option value="-1">-- Select --</option>' +
+                        headers.map((h, i) => `<option value="${i}">${h}</option>`).join('');
+
+                    select.value = findBestMatch(rule.candidates, rule.avoid);
+                });
+            }
+
+            document.getElementById('startDialing').addEventListener('click', () => {
+                columnMap = {
+                    phone: +document.getElementById('mapPhone').value,
+                    name: +document.getElementById('mapName').value,
+                    company: +document.getElementById('mapCompany').value,
+                    comments: +document.getElementById('mapComments').value
+                };
+                mapper.classList.remove('show');
+                dialerPanel.classList.add('show');
+                exportBar.classList.add('show');
+                showLead(0);
+            });
+
+            function showLead(index) {
+                if (index < 0 || index >= csvData.length) return;
+                currentIndex = index;
+                const lead = csvData[index];
+                document.getElementById('leadName').textContent = headers[columnMap.name] ? lead[headers[columnMap.name]] : 'Unknown';
+                document.getElementById('leadCompany').textContent = headers[columnMap.company] ? lead[headers[columnMap.company]] : '';
+                document.getElementById('leadPhone').textContent = headers[columnMap.phone] ? formatPhone(lead[headers[columnMap.phone]]) : '--';
+                document.getElementById('leadState').textContent = lead._enriched.state || lead['State'] || '--';
+
+                // Show Comments
+                const currentComments = columnMap.comments >= 0 ? lead[headers[columnMap.comments]] : '';
+                document.getElementById('leadComments').textContent = currentComments || 'No comments.';
+
+                document.getElementById('leadIndex').textContent = `${index + 1} / ${csvData.length}`;
+                document.getElementById('notesInput').value = ''; // Always clear notes input for new lead
+                document.getElementById('progressText').textContent = `${stats.called} / ${stats.total} completed`;
+            }
+
+            function formatPhone(phone) {
+                if (!phone) return '--';
+                const digits = phone.toString().replace(/\D/g, '');
+                return digits.length === 10 ? `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}` : phone;
+            }
+
+            document.getElementById('callBtn').addEventListener('click', () => {
+                const lead = csvData[currentIndex];
+                const phone = headers[columnMap.phone] ? lead[headers[columnMap.phone]] : '';
+                if (!phone) return alert('No phone number!');
+                window.open(`tel:${phone.replace(/\D/g, '')}`, '_blank');
+                stats.called++;
+                updateStats();
+            });
+
+
+
+            document.querySelectorAll('.disp-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const status = btn.dataset.status;
+                    const noteInput = document.getElementById('notesInput').value.trim();
+                    const today = new Date().toLocaleDateString('en-US');
+
+                    // Construct new note entry
+                    const newEntry = `${status}${noteInput ? ' - ' + noteInput : ''} (${today})`;
+
+                    // Append to existing comments
+                    const commentCol = headers[columnMap.comments];
+                    if (columnMap.comments >= 0 && commentCol) {
+                        const currentVal = csvData[currentIndex][commentCol] || '';
+                        csvData[currentIndex][commentCol] = currentVal ? currentVal + '\n' + newEntry : newEntry;
+
+                        // Update UI
+                        document.getElementById('leadComments').textContent = csvData[currentIndex][commentCol];
+                    }
+
+                    csvData[currentIndex]._disposition = status; // Keep track of last action
+
+                    // Clear input and move next
+                    document.getElementById('notesInput').value = '';
+
+                    // Visual feedback
+                    btn.textContent = '✅ Updated';
+                    setTimeout(() => {
+                        // Reset button text based on status
+                        const map = { 'VM': '📼 VM (Voicemail)', 'GK': '🛡️ GK (Gatekeeper)', 'NA': '🚫 NA (No Answer)', 'WN': '❌ WN (Wrong Number)', 'Custom': '📝 Custom Note' };
+                        btn.textContent = map[status] || status;
+                        showLead(currentIndex + 1);
+                    }, 600);
+                });
+            });
+
+            document.getElementById('prevBtn').addEventListener('click', () => showLead(currentIndex - 1));
+            document.getElementById('nextBtn').addEventListener('click', () => showLead(currentIndex + 1));
+
+            function updateStats() {
+                document.getElementById('statTotal').textContent = stats.total;
+                document.getElementById('statCalled').textContent = stats.called;
+                document.getElementById('statConnected').textContent = stats.connected;
+            }
+
+            document.getElementById('exportBtn').addEventListener('click', () => {
+                // We export the original headers (which now contain the updated comments) + disposition column
+                const exportHeaders = [...headers, 'Last_Disposition'];
+                const rows = csvData.map(row => {
+                    const original = headers.map(h => `"${(row[h] || '').replace(/"/g, '""')}"`);
+
+                    original.push(`"${row._disposition}"`, `"${(row._notes || '').replace(/"/g, '""')}"`);
+                    return original.join(',');
+                });
+                const blob = new Blob([[exportHeaders.join(','), ...rows].join('\n')], { type: 'text/csv' });
+                const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+                a.download = `dialer_export_${new Date().toISOString().slice(0, 10)}.csv`;
+                a.click();
+            });
+        </script>
+</body>
+
+</html>
