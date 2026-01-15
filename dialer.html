@@ -713,7 +713,7 @@
                     'mapPhone': { candidates: ['AuthPhone', 'OfficePhone', 'Phone', 'Mobile', 'Cell'], avoid: [] },
                     'mapName': { candidates: ['AuthOfficialName', 'Opener', 'Name', 'Contact'], avoid: ['DUP'] },
                     'mapCompany': { candidates: ['Legalbusinessname', 'Company', 'Organization', 'Business'], avoid: [] },
-                    'mapNPI': { candidates: ['NPI', 'NPI Number'], avoid: [] }
+                    'mapComments': { candidates: ['Comments', 'Notes', 'History', 'Log'], avoid: [] }
                 };
 
                 const findBestMatch = (candidates, avoidList) => {
