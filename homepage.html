@@ -637,7 +637,7 @@
                         <li>Export to CSV/JSON</li>
                         <li>Session persistence</li>
                     </ul>
-                    <button class="btn btn-secondary">Open in New Tab →</button>
+                    <button class="btn" onclick="openTool('search')">Launch Search Engine →</button>
                 </div>
 
                 <!-- Power Dialer -->
@@ -743,9 +743,15 @@
         let enrichedData = null;
 
         function openTool(tool) {
+            document.getElementById('homePage').classList.add('hidden');
+            document.getElementById('enrichmentPage').classList.add('hidden');
+            document.getElementById('searchPage').classList.add('hidden');
+
             if (tool === 'enrichment') {
-                document.getElementById('homePage').classList.add('hidden');
                 document.getElementById('enrichmentPage').classList.remove('hidden');
+            } else if (tool === 'search') {
+                document.getElementById('searchPage').classList.remove('hidden');
+                lucide.createIcons();
             }
         }
 
@@ -989,6 +995,134 @@
             URL.revokeObjectURL(url);
 
             addLog('✅ File downloaded successfully!');
+        }
+    </script>
+    <script>
+        // --- NPI Search Engine Logic ---
+        let searchRawData = [];
+        let searchFilteredData = [];
+        let searchHeaders = [];
+        let searchPage = 1;
+        let searchRowsPerPage = 50;
+        let searchIndex = [];
+
+        document.getElementById('searchInputFile').addEventListener('change', handleSearchFile);
+        document.getElementById('dbSearchInput').addEventListener('input', debounce(handleSearchInput, 300));
+
+        document.getElementById('searchPrevBtn').addEventListener('click', () => changeSearchPage(-1));
+        document.getElementById('searchNextBtn').addEventListener('click', () => changeSearchPage(1));
+
+        function handleSearchFile(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            document.getElementById('searchStats').textContent = 'Parsing file...';
+
+            setTimeout(() => {
+                Papa.parse(file, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: (results) => {
+                        processSearchData(results.data, results.meta.fields);
+                    },
+                    error: (err) => alert('Error: ' + err.message)
+                });
+            }, 100);
+        }
+
+        function processSearchData(data, fields) {
+            searchRawData = data;
+            searchHeaders = fields;
+
+            // Indexing for speed
+            document.getElementById('searchStats').textContent = 'Indexing...';
+            setTimeout(() => {
+                searchIndex = searchRawData.map(row => Object.values(row).join(' ').toLowerCase());
+                searchFilteredData = searchRawData;
+
+                // UI Updates
+                document.getElementById('dbSearchInput').disabled = false;
+                document.getElementById('searchExportBtn').disabled = false;
+                document.getElementById('searchEmptyState').style.display = 'none';
+                document.getElementById('searchPagination').style.display = 'flex';
+
+                renderSearchHeaders();
+                renderSearchTable();
+                updateSearchStats();
+                buildFilterUI();
+            }, 100);
+        }
+
+        function renderSearchHeaders() {
+            const thead = document.getElementById('searchTableHead');
+            // Show first 6 columns by default
+            const cols = searchHeaders.slice(0, 6);
+            thead.innerHTML = '<tr>' + cols.map(h => `<th>${h}</th>`).join('') + '</tr>';
+        }
+
+        function renderSearchTable() {
+            const tbody = document.getElementById('searchTableBody');
+            const start = (searchPage - 1) * searchRowsPerPage;
+            const end = start + searchRowsPerPage;
+            const pageData = searchFilteredData.slice(start, end);
+            const cols = searchHeaders.slice(0, 6);
+
+            tbody.innerHTML = pageData.map(row => {
+                return '<tr>' + cols.map(col => `<td>${row[col] || ''}</td>`).join('') + '</tr>';
+            }).join('');
+
+            // Update Page Info
+            document.getElementById('searchPageInfo').textContent = `Showing ${start + 1}-${Math.min(end, searchFilteredData.length)} of ${searchFilteredData.length}`;
+            document.getElementById('searchPrevBtn').disabled = searchPage === 1;
+            document.getElementById('searchNextBtn').disabled = end >= searchFilteredData.length;
+        }
+
+        function handleSearchInput() {
+            const query = document.getElementById('dbSearchInput').value.toLowerCase().trim();
+
+            if (!query) {
+                searchFilteredData = searchRawData;
+            } else {
+                searchFilteredData = [];
+                for (let i = 0; i < searchIndex.length; i++) {
+                    if (searchIndex[i].includes(query)) {
+                        searchFilteredData.push(searchRawData[i]);
+                    }
+                    if (searchFilteredData.length >= 1000) break; // Limit results for perf
+                }
+            }
+
+            searchPage = 1;
+            renderSearchTable();
+            updateSearchStats();
+        }
+
+        function updateSearchStats() {
+            document.getElementById('searchStats').textContent = `${searchFilteredData.length.toLocaleString()} records found`;
+        }
+
+        function changeSearchPage(dir) {
+            searchPage += dir;
+            renderSearchTable();
+        }
+
+        function buildFilterUI() {
+            // Simple dynamic filters for now
+            const container = document.getElementById('searchFilterContainer');
+            container.innerHTML = '';
+            // Only build if we have state/taxonomy
+            const stateField = searchHeaders.find(h => h.toLowerCase().includes('state'));
+            if (stateField) {
+                // add state filter logic here if needed
+            }
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
         }
     </script>
 </body>
