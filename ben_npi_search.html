@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,31 +8,75 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Geist:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
         @keyframes scanline {
-            0% { background-position: 0 0; }
-            100% { background-position: 0 4px; }
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 0 4px;
+            }
         }
-        
+
         @keyframes blink {
-            0%, 49%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+
+            0%,
+            49%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
         }
-        
+
         @keyframes pulse-pip {
-            0%, 100% { box-shadow: 0 0 4px rgba(0, 112, 255, 0.6), inset 0 0 2px rgba(0, 112, 255, 0.8); }
-            50% { box-shadow: 0 0 8px rgba(0, 112, 255, 0.9), inset 0 0 4px rgba(0, 112, 255, 1); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 4px rgba(0, 112, 255, 0.6), inset 0 0 2px rgba(0, 112, 255, 0.8);
+            }
+
+            50% {
+                box-shadow: 0 0 8px rgba(0, 112, 255, 0.9), inset 0 0 4px rgba(0, 112, 255, 1);
+            }
         }
-        
+
         @keyframes flicker {
-            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { text-shadow: 0 0 5px rgba(0, 112, 255, 0.5); }
-            20%, 24%, 55% { text-shadow: 0 0 10px rgba(0, 112, 255, 0.8); }
+
+            0%,
+            19%,
+            21%,
+            23%,
+            25%,
+            54%,
+            56%,
+            100% {
+                text-shadow: 0 0 5px rgba(0, 112, 255, 0.5);
+            }
+
+            20%,
+            24%,
+            55% {
+                text-shadow: 0 0 10px rgba(0, 112, 255, 0.8);
+            }
         }
-        
+
         @keyframes slideInFromTop {
-            0% { transform: translateY(-20px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
+            0% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         :root {
@@ -65,7 +110,11 @@
             --grid-color: rgba(200, 200, 200, 0.3);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -76,7 +125,7 @@
             flex-direction: column;
             overflow: hidden;
             position: relative;
-            background-image: 
+            background-image:
                 linear-gradient(0deg, transparent 24%, rgba(31, 41, 55, 0.5) 25%, rgba(31, 41, 55, 0.5) 26%, transparent 27%, transparent 74%, rgba(31, 41, 55, 0.5) 75%, rgba(31, 41, 55, 0.5) 76%, transparent 77%, transparent),
                 linear-gradient(90deg, transparent 24%, rgba(31, 41, 55, 0.5) 25%, rgba(31, 41, 55, 0.5) 26%, transparent 27%, transparent 74%, rgba(31, 41, 55, 0.5) 75%, rgba(31, 41, 55, 0.5) 76%, transparent 77%, transparent);
             background-size: 48px 48px;
@@ -116,7 +165,7 @@
             letter-spacing: 0.5px;
             font-family: 'JetBrains Mono', monospace;
         }
-        
+
         h1 svg {
             color: var(--electric-blue);
             animation: pulse-pip 2s infinite;
@@ -161,7 +210,7 @@
             border: 1px solid var(--border-color);
             transition: all 0.15s;
         }
-        
+
         .controls-area:hover {
             border-color: var(--electric-blue);
             background: var(--void-lighter);
@@ -187,12 +236,14 @@
             background: var(--electric-blue-hover);
             border-color: var(--electric-blue-hover);
         }
-        
+
         .file-upload-btn:active {
             opacity: 0.8;
         }
-        
-        input[type="file"] { display: none; }
+
+        input[type="file"] {
+            display: none;
+        }
 
         .search-wrapper {
             flex: 1;
@@ -211,11 +262,11 @@
             transition: all 0.15s;
             font-family: 'Geist', sans-serif;
         }
-        
+
         .search-input::placeholder {
             color: var(--text-secondary);
         }
-        
+
         .search-input:focus {
             outline: none;
             border-color: var(--electric-blue);
@@ -233,8 +284,8 @@
             height: 16px;
             transition: color 0.15s;
         }
-        
-        .search-input:focus + .search-icon {
+
+        .search-input:focus+.search-icon {
             color: var(--electric-blue);
         }
 
@@ -283,33 +334,43 @@
             font-size: 0.85rem;
             font-family: 'Geist', sans-serif;
         }
+
         .btn:hover {
             background: var(--void-lighter);
             border-color: var(--electric-blue);
             color: var(--electric-blue);
         }
+
         .btn:active {
             background: var(--void-lighter);
             opacity: 0.8;
         }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .btn-primary {
             background: var(--electric-blue);
             border-color: var(--electric-blue);
             color: var(--void);
             font-weight: 600;
         }
+
         .btn-primary:hover {
             background: var(--electric-blue-hover);
             border-color: var(--electric-blue-hover);
             color: var(--void);
         }
+
         .btn-secondary {
             background: var(--neon-amber);
             border-color: var(--neon-amber);
             color: var(--void);
             font-weight: 600;
         }
+
         .btn-secondary:hover {
             background: #E59E14;
             border-color: #E59E14;
@@ -328,7 +389,7 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             animation: slideInFromLeft 0.6s ease-out;
         }
-        
+
 
         .filter-section.active {
             display: block;
@@ -407,7 +468,7 @@
             border: 1px solid var(--glass-border);
             transition: all 0.3s ease;
         }
-        
+
         .column-item:hover {
             background: rgba(0, 212, 255, 0.05);
             border-color: var(--accent);
@@ -481,7 +542,7 @@
             letter-spacing: 0.5px;
             font-size: 0.8rem;
             border-right: 1px solid var(--glass-border);
-        
+
             font-weight: 600;
             color: var(--accent);
             cursor: pointer;
@@ -559,7 +620,10 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        tbody tr:hover { background-color: rgba(0, 212, 255, 0.08); }
+
+        tbody tr:hover {
+            background-color: rgba(0, 212, 255, 0.08);
+        }
 
         tbody tr.selected {
             background-color: rgba(0, 212, 255, 0.2);
@@ -614,7 +678,7 @@
             transition: all 0.3s ease;
             backdrop-filter: blur(5px);
         }
-        
+
         .rows-per-page select:hover {
             border-color: var(--accent);
         }
@@ -641,7 +705,7 @@
             border: 1px solid var(--glass-border);
             transition: all 0.3s ease;
         }
-        
+
         .stat-item:hover {
             background: rgba(0, 212, 255, 0.1);
             border-color: var(--accent);
@@ -669,8 +733,11 @@
         /* --- Modal (Contact Card) --- */
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
             display: none;
             justify-content: center;
             align-items: center;
@@ -678,10 +745,15 @@
             backdrop-filter: blur(8px);
             animation: fadeIn 0.3s ease-out;
         }
-        
+
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         .modal-card {
@@ -691,7 +763,7 @@
             max-height: 90vh;
             border-radius: 16px;
             border: 1px solid var(--glass-border);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -714,7 +786,7 @@
             margin-bottom: 5px;
             font-weight: 700;
         }
-        
+
         .modal-header p {
             color: var(--accent);
             font-size: 0.9rem;
@@ -731,7 +803,7 @@
             transition: all 0.3s ease;
             padding: 5px;
         }
-        
+
         .close-btn:hover {
             color: var(--accent);
             transform: scale(1.2) rotate(90deg);
@@ -751,7 +823,7 @@
             border: 1px solid var(--glass-border);
             transition: all 0.3s ease;
         }
-        
+
         .card-section:hover {
             border-color: var(--accent);
             box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
@@ -851,15 +923,21 @@
             z-index: 2000;
             backdrop-filter: blur(10px);
         }
-        
+
         .spinner {
-            width: 16px; height: 16px;
+            width: 16px;
+            height: 16px;
             border: 2px solid var(--text-muted);
             border-top-color: var(--accent);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
 
         .empty-state {
             display: flex;
@@ -870,6 +948,7 @@
             color: var(--text-secondary);
             text-align: center;
         }
+
         .empty-state i {
             font-size: 3rem;
             margin-bottom: 15px;
@@ -888,6 +967,7 @@
             margin-left: 8px;
             transition: all 0.3s ease;
         }
+
         .copy-btn:hover {
             color: var(--accent);
             border-color: var(--accent);
@@ -1033,8 +1113,11 @@
         /* Pre-filter Modal */
         .pre-filter-modal {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
             display: none;
             justify-content: center;
             align-items: center;
@@ -1050,7 +1133,7 @@
             border: 1px solid var(--glass-border);
             max-width: 500px;
             width: 90%;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(10px);
             animation: slideInFromTop 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -1312,8 +1395,11 @@
         /* Session Restore Dialog */
         .session-restore-overlay {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
             display: none;
             justify-content: center;
             align-items: center;
@@ -1329,7 +1415,7 @@
             border: 1px solid var(--glass-border);
             max-width: 450px;
             width: 90%;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(10px);
             animation: slideInFromTop 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -1402,722 +1488,772 @@
             border-color: var(--accent);
             transform: translateY(-2px);
         }
-
     </style>
 </head>
+
 <body>
 
-<!-- Pre-filter Modal -->
-<div class="pre-filter-modal" id="preFilterModal">
-    <div class="pre-filter-content">
-        <h2><i data-lucide="filter" style="display: inline; vertical-align: middle; margin-right: 10px; width: 24px; height: 24px;"></i> Load Data Options</h2>
-        
-        <div class="nppes-warning" id="nppesMissingWarning">
-            ⚠️ Some expected NPPES columns not detected. File may not be standard NPPES format.
-        </div>
+    <!-- Pre-filter Modal -->
+    <div class="pre-filter-modal" id="preFilterModal">
+        <div class="pre-filter-content">
+            <h2><i data-lucide="filter"
+                    style="display: inline; vertical-align: middle; margin-right: 10px; width: 24px; height: 24px;"></i>
+                Load Data Options</h2>
 
-        <div class="pre-filter-group">
-            <label>Maximum Rows to Load</label>
-            <input type="number" id="maxRowsInput" value="50000" min="1000" max="1000000" step="1000">
-            <small style="color: var(--text-muted); margin-top: 5px; display: block;">Limit data loading to prevent browser freeze. Default: 50,000</small>
-        </div>
+            <div class="nppes-warning" id="nppesMissingWarning">
+                ⚠️ Some expected NPPES columns not detected. File may not be standard NPPES format.
+            </div>
 
-        <div class="pre-filter-group">
-            <label>Filter by Last Update Date Range (Optional)</label>
-            <div class="date-range-inputs">
-                <div>
-                    <small style="color: var(--text-muted);">From</small>
-                    <input type="date" id="preFilterDateFrom">
-                </div>
-                <div>
-                    <small style="color: var(--text-muted);">To</small>
-                    <input type="date" id="preFilterDateTo">
+            <div class="pre-filter-group">
+                <label>Maximum Rows to Load</label>
+                <input type="number" id="maxRowsInput" value="50000" min="1000" max="1000000" step="1000">
+                <small style="color: var(--text-muted); margin-top: 5px; display: block;">Limit data loading to prevent
+                    browser freeze. Default: 50,000</small>
+            </div>
+
+            <div class="pre-filter-group">
+                <label>Filter by Last Update Date Range (Optional)</label>
+                <div class="date-range-inputs">
+                    <div>
+                        <small style="color: var(--text-muted);">From</small>
+                        <input type="date" id="preFilterDateFrom">
+                    </div>
+                    <div>
+                        <small style="color: var(--text-muted);">To</small>
+                        <input type="date" id="preFilterDateTo">
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="pre-filter-group">
-            <label>Filter by State (Optional)</label>
-            <select id="preFilterState" style="width: 100%; background: var(--bg-dark); border: 1px solid var(--border); color: var(--text-main); padding: 10px; border-radius: 6px;">
-                <option value="">All States</option>
-            </select>
-        </div>
+            <div class="pre-filter-group">
+                <label>Filter by State (Optional)</label>
+                <select id="preFilterState"
+                    style="width: 100%; background: var(--bg-dark); border: 1px solid var(--border); color: var(--text-main); padding: 10px; border-radius: 6px;">
+                    <option value="">All States</option>
+                </select>
+            </div>
 
-        <div class="pre-filter-buttons">
-            <button class="btn-load-all" onclick="proceedWithoutPreFilter()">Load All</button>
-            <button class="btn-load-filtered" onclick="proceedWithPreFilter()">Load Filtered</button>
+            <div class="pre-filter-buttons">
+                <button class="btn-load-all" onclick="proceedWithoutPreFilter()">Load All</button>
+                <button class="btn-load-filtered" onclick="proceedWithPreFilter()">Load Filtered</button>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="app-container">
-    <header>
-        <h1><i data-lucide="database"></i> Ben's NPI Search Engine</h1>
-        <div class="header-actions">
-            <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">
-                <i data-lucide="moon"></i>
+    <div class="app-container">
+        <header>
+            <h1><i data-lucide="database"></i> Ben's NPI Search Engine</h1>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">
+                    <i data-lucide="moon"></i>
+                </button>
+                <div style="font-size: 0.9rem; color: var(--text-muted);">
+                    Accepts: CSV, XLSX, XLS
+                </div>
+            </div>
+        </header>
+
+        <div class="controls-area">
+            <div class="recent-files-wrapper">
+                <label class="file-upload-btn" id="fileUploadLabel">
+                    <i data-lucide="upload"></i> Load File
+                    <input type="file" id="fileInput" accept=".csv,.xlsx,.xls">
+                </label>
+                <div class="recent-files-dropdown" id="recentFilesDropdown"></div>
+            </div>
+
+            <div class="search-wrapper">
+                <i data-lucide="search" class="search-icon"></i>
+                <input type="text" id="searchInput" class="search-input"
+                    placeholder="Search NPI, Name, Address, or Phone... (Press Ctrl+F)" disabled>
+                <div class="search-history-dropdown" id="searchHistory"></div>
+            </div>
+
+            <button class="btn btn-primary" id="exportBtn" disabled title="Export filtered data as CSV">
+                <i data-lucide="download"></i> Export
             </button>
-            <div style="font-size: 0.9rem; color: var(--text-muted);">
-                Accepts: CSV, XLSX, XLS
+
+            <button class="btn btn-secondary" id="exportJsonBtn" disabled title="Export as JSON">
+                <i data-lucide="code"></i> JSON
+            </button>
+
+            <button class="btn" id="filterBtn" disabled title="Advanced filters">
+                <i data-lucide="filter"></i> Filters
+            </button>
+
+            <button class="btn" id="columnsBtn" disabled title="Configure columns">
+                <i data-lucide="columns"></i> Columns
+            </button>
+
+            <button class="btn" id="resetBtn" disabled title="Reset search and filters">
+                <i data-lucide="rotate-ccw"></i> Reset
+            </button>
+
+            <div class="density-controls">
+                <span style="font-size: 0.85rem; color: var(--text-muted);">Density:</span>
+                <button class="density-btn active" data-density="normal"
+                    onclick="setRowDensity('normal')">Normal</button>
+                <button class="density-btn" data-density="compact" onclick="setRowDensity('compact')">Compact</button>
+                <button class="density-btn" data-density="spacious"
+                    onclick="setRowDensity('spacious')">Spacious</button>
             </div>
         </div>
-    </header>
 
-    <div class="controls-area">
-        <div class="recent-files-wrapper">
-            <label class="file-upload-btn" id="fileUploadLabel">
-                <i data-lucide="upload"></i> Load File
-                <input type="file" id="fileInput" accept=".csv,.xlsx,.xls">
-            </label>
-            <div class="recent-files-dropdown" id="recentFilesDropdown"></div>
+        <div class="quick-filters" id="quickFilters"
+            style="display: none; padding: 0 20px; margin-bottom: 15px; gap: 10px;">
+            <span style="font-size: 0.85rem; color: var(--text-muted); align-self: center;">Quick Filters:</span>
+            <button class="quick-filter-btn" onclick="applyQuickFilter('organizations')">Organizations Only</button>
+            <button class="quick-filter-btn" onclick="applyQuickFilter('missing-phone')">Missing Phone</button>
+            <button class="quick-filter-btn" onclick="applyQuickFilter('missing-official')">Missing Auth
+                Official</button>
+            <button class="quick-filter-btn" onclick="applyQuickFilter('clear')">Clear Filters</button>
         </div>
 
-        <div class="search-wrapper">
-            <i data-lucide="search" class="search-icon"></i>
-            <input type="text" id="searchInput" class="search-input" placeholder="Search NPI, Name, Address, or Phone... (Press Ctrl+F)" disabled>
-            <div class="search-history-dropdown" id="searchHistory"></div>
-        </div>
-
-        <button class="btn btn-primary" id="exportBtn" disabled title="Export filtered data as CSV">
-            <i data-lucide="download"></i> Export
-        </button>
-
-        <button class="btn btn-secondary" id="exportJsonBtn" disabled title="Export as JSON">
-            <i data-lucide="code"></i> JSON
-        </button>
-        
-        <button class="btn" id="filterBtn" disabled title="Advanced filters">
-            <i data-lucide="filter"></i> Filters
-        </button>
-
-        <button class="btn" id="columnsBtn" disabled title="Configure columns">
-            <i data-lucide="columns"></i> Columns
-        </button>
-        
-        <button class="btn" id="resetBtn" disabled title="Reset search and filters">
-            <i data-lucide="rotate-ccw"></i> Reset
-        </button>
-
-        <div class="density-controls">
-            <span style="font-size: 0.85rem; color: var(--text-muted);">Density:</span>
-            <button class="density-btn active" data-density="normal" onclick="setRowDensity('normal')">Normal</button>
-            <button class="density-btn" data-density="compact" onclick="setRowDensity('compact')">Compact</button>
-            <button class="density-btn" data-density="spacious" onclick="setRowDensity('spacious')">Spacious</button>
-        </div>
-    </div>
-
-    <div class="quick-filters" id="quickFilters" style="display: none; padding: 0 20px; margin-bottom: 15px; gap: 10px;">
-        <span style="font-size: 0.85rem; color: var(--text-muted); align-self: center;">Quick Filters:</span>
-        <button class="quick-filter-btn" onclick="applyQuickFilter('organizations')">Organizations Only</button>
-        <button class="quick-filter-btn" onclick="applyQuickFilter('missing-phone')">Missing Phone</button>
-        <button class="quick-filter-btn" onclick="applyQuickFilter('missing-official')">Missing Auth Official</button>
-        <button class="quick-filter-btn" onclick="applyQuickFilter('clear')">Clear Filters</button>
-    </div>
-
-    <div class="stats-bar" id="statsBar" style="display: none;">
-        <div class="stat-item">
-            <div class="stat-value" id="totalRows">0</div>
-            <div class="stat-label">Total Records</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value" id="filteredRows">0</div>
-            <div class="stat-label">Visible Records</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value" id="uniqueOrgs">0</div>
-            <div class="stat-label">Unique Orgs</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value" id="uniqueStates">0</div>
-            <div class="stat-label">States Covered</div>
-        </div>
-    </div>
-
-    <div class="filter-section" id="filterSection">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3 style="color: var(--text-main);">Advanced Filters</h3>
-            <button class="btn" onclick="clearFilters()" style="padding: 5px 10px; font-size: 0.85rem;">Clear All</button>
-        </div>
-        <div class="filter-group" id="filterGroup"></div>
-    </div>
-
-    <div class="column-config" id="columnConfig">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3 style="color: var(--text-main);">Select Columns to Display</h3>
-            <button class="btn" onclick="resetColumns()" style="padding: 5px 10px; font-size: 0.85rem;">Reset</button>
-        </div>
-        <div class="column-list" id="columnList"></div>
-    </div>
-
-    <div class="bulk-actions" id="bulkActions">
-        <div class="bulk-count" id="bulkCount">0 selected</div>
-        <button class="btn" id="bulkCopyBtn" onclick="bulkCopyNameAndPhone()">
-            <i data-lucide="copy"></i> Copy Selected
-        </button>
-        <button class="btn" id="bulkExportBtn" onclick="bulkExport()">
-            <i data-lucide="download"></i> Export Selected
-        </button>
-    </div>
-
-    <div class="table-container" id="tableContainer">
-        <div class="empty-state">
-            <i data-lucide="file-spreadsheet" style="width: 64px; height: 64px;"></i>
-            <h3>No Data Loaded</h3>
-            <p>Upload a file to begin crosswalking.</p>
-        </div>
-        <table id="dataTable" style="display: none;">
-            <thead id="tableHead"></thead>
-            <tbody id="tableBody"></tbody>
-        </table>
-    </div>
-
-    <div class="pagination" id="pagination" style="display: none;">
-        <div class="page-info" id="pageInfo">Showing 0-0 of 0</div>
-        <div class="rows-per-page">
-            <label for="rowsSelect">Rows per page:</label>
-            <select id="rowsSelect">
-                <option value="25">25</option>
-                <option value="50" selected>50</option>
-                <option value="100">100</option>
-                <option value="200">200</option>
-            </select>
-        </div>
-        <div style="display: flex; gap: 10px;">
-            <button class="btn" id="prevBtn"><i data-lucide="chevron-left"></i> Prev</button>
-            <button class="btn" id="nextBtn">Next <i data-lucide="chevron-right"></i></button>
-        </div>
-    </div>
-</div>
-
-<div class="modal-overlay" id="modalOverlay">
-    <div class="modal-card">
-        <div class="modal-header">
-            <div>
-                <h2 id="modalTitle">Provider Name</h2>
-                <p id="modalSubtitle">NPI: 1234567890</p>
+        <div class="stats-bar" id="statsBar" style="display: none;">
+            <div class="stat-item">
+                <div class="stat-value" id="totalRows">0</div>
+                <div class="stat-label">Total Records</div>
             </div>
-            <button class="close-btn" id="closeModal">&times;</button>
+            <div class="stat-item">
+                <div class="stat-value" id="filteredRows">0</div>
+                <div class="stat-label">Visible Records</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="uniqueOrgs">0</div>
+                <div class="stat-label">Unique Orgs</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="uniqueStates">0</div>
+                <div class="stat-label">States Covered</div>
+            </div>
         </div>
-        <div class="modal-body" id="modalBody"></div>
+
+        <div class="filter-section" id="filterSection">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="color: var(--text-main);">Advanced Filters</h3>
+                <button class="btn" onclick="clearFilters()" style="padding: 5px 10px; font-size: 0.85rem;">Clear
+                    All</button>
+            </div>
+            <div class="filter-group" id="filterGroup"></div>
+        </div>
+
+        <div class="column-config" id="columnConfig">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="color: var(--text-main);">Select Columns to Display</h3>
+                <button class="btn" onclick="resetColumns()"
+                    style="padding: 5px 10px; font-size: 0.85rem;">Reset</button>
+            </div>
+            <div class="column-list" id="columnList"></div>
+        </div>
+
+        <div class="bulk-actions" id="bulkActions">
+            <div class="bulk-count" id="bulkCount">0 selected</div>
+            <button class="btn" id="bulkCopyBtn" onclick="bulkCopyNameAndPhone()">
+                <i data-lucide="copy"></i> Copy Selected
+            </button>
+            <button class="btn" id="bulkExportBtn" onclick="bulkExport()">
+                <i data-lucide="download"></i> Export Selected
+            </button>
+        </div>
+
+        <div class="table-container" id="tableContainer">
+            <div class="empty-state">
+                <i data-lucide="file-spreadsheet" style="width: 64px; height: 64px;"></i>
+                <h3>No Data Loaded</h3>
+                <p>Upload a file to begin crosswalking.</p>
+            </div>
+            <table id="dataTable" style="display: none;">
+                <thead id="tableHead"></thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+
+        <div class="pagination" id="pagination" style="display: none;">
+            <div class="page-info" id="pageInfo">Showing 0-0 of 0</div>
+            <div class="rows-per-page">
+                <label for="rowsSelect">Rows per page:</label>
+                <select id="rowsSelect">
+                    <option value="25">25</option>
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn" id="prevBtn"><i data-lucide="chevron-left"></i> Prev</button>
+                <button class="btn" id="nextBtn">Next <i data-lucide="chevron-right"></i></button>
+            </div>
+        </div>
     </div>
-</div>
 
-<!-- Session Restore Dialog -->
-<div class="session-restore-overlay" id="sessionRestoreOverlay">
-    <div class="session-restore-dialog">
-        <h2>📄 Resume Your Session?</h2>
-        <div class="session-info">
-            <div class="session-info-item"><strong>File:</strong> <span id="restoreFileName">Unknown</span></div>
-            <div class="session-info-item"><strong>Records:</strong> <span id="restoreRecordCount">0</span></div>
-            <div class="session-info-item"><strong>Saved:</strong> <span id="restoreTimestamp">Just now</span></div>
-            <div class="session-info-item"><strong>Filters Active:</strong> <span id="restoreFilterCount">0</span></div>
-        </div>
-        <div class="session-buttons">
-            <button class="btn-restore-session" onclick="restoreSession()">Resume Session</button>
-            <button class="btn-skip-session" onclick="skipSessionRestore()">Start Fresh</button>
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div>
+                    <h2 id="modalTitle">Provider Name</h2>
+                    <p id="modalSubtitle">NPI: 1234567890</p>
+                </div>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
         </div>
     </div>
-</div>
 
-<div class="status-bar" id="statusBar">
-    <div class="spinner"></div>
-    <span id="statusText">Processing...</span>
-</div>
+    <!-- Session Restore Dialog -->
+    <div class="session-restore-overlay" id="sessionRestoreOverlay">
+        <div class="session-restore-dialog">
+            <h2>📄 Resume Your Session?</h2>
+            <div class="session-info">
+                <div class="session-info-item"><strong>File:</strong> <span id="restoreFileName">Unknown</span></div>
+                <div class="session-info-item"><strong>Records:</strong> <span id="restoreRecordCount">0</span></div>
+                <div class="session-info-item"><strong>Saved:</strong> <span id="restoreTimestamp">Just now</span></div>
+                <div class="session-info-item"><strong>Filters Active:</strong> <span id="restoreFilterCount">0</span>
+                </div>
+            </div>
+            <div class="session-buttons">
+                <button class="btn-restore-session" onclick="restoreSession()">Resume Session</button>
+                <button class="btn-skip-session" onclick="skipSessionRestore()">Start Fresh</button>
+            </div>
+        </div>
+    </div>
 
-<script>
-    // --- NPPES Column Mapping ---
-    const NPPES_COLUMN_MAP = {
-        'NPI': ['NPI', 'NPI Number'],
-        'legalBusinessName': ['Provider Organization Name', 'Legal Business Name', 'Provider Legal Business Name'],
-        'providerFirstName': ['Provider First Name', 'Provider First Name Name'],
-        'providerLastName': ['Provider Last Name', 'Provider Last Name Name'],
-        'authOfficialFirstName': ['Authorized Official First Name', 'Authorized Official First Name'],
-        'authOfficialLastName': ['Authorized Official Last Name', 'Authorized Official Last Name'],
-        'authOfficialPhone': ['Authorized Official Telephone Number', 'Authorized Official Telephone'],
-        'practicePhone': ['Practice Location Address Telephone Number', 'Provider Business Practice Location Address Telephone Number'],
-        'practiceAddress': ['Practice Location Address Line One', 'Provider Business Practice Location Address Line One'],
-        'practiceCity': ['Practice Location Address City', 'Provider Business Practice Location Address City'],
-        'practiceState': ['Practice Location Address State', 'Provider Business Practice Location Address State Name', 'Practice Location Address State Name'],
-        'lastUpdateDate': ['Last Update Date', 'Provider Last Update Date'],
-        'enumerationDate': ['Provider Enumeration Date', 'Enumeration Date'],
-        'taxonomyCode': ['Healthcare Provider Taxonomy Code_1', 'Provider Healthcare Provider Taxonomy Code_1']
-    };
+    <div class="status-bar" id="statusBar">
+        <div class="spinner"></div>
+        <span id="statusText">Processing...</span>
+    </div>
 
-    // Map to store detected columns for quick lookup
-    let columnMap = {};
-    let isNPPESFormat = false;
-
-    // --- State ---
-    let rawData = [];
-    let filteredData = [];
-    let headers = [];
-    let searchIndex = [];
-    let selectedRows = new Set();
-    let visibleColumns = [];
-    let filters = { dateFrom: null, dateTo: null };
-    let sortConfig = { column: null, direction: 'asc' };
-    let searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]').slice(0, 10);
-    let recentFiles = JSON.parse(localStorage.getItem('recentFiles') || '[]').slice(0, 5);
-    let currentDensity = localStorage.getItem('density') || 'normal';
-    let activeQuickFilters = new Set();
-    let pendingPreFilters = {};
-    let exportList = new Set(); // Track providers to export
-    let providerNotes = {}; // Store notes for providers
-    let lastSessionData = null; // Session restore data
-
-    // Workspace Persistence Keys
-    const SESSION_KEY = 'npiSearchSession';
-    const NOTES_KEY = 'providerNotes';
-    const EXPORT_LIST_KEY = 'exportList';
-    
-    // Column description mapping for tooltips
-    const columnDescriptions = {
-        'NPI': 'National Provider Identifier - unique 10-digit number',
-        'Legal Business Name': 'The official registered name of the organization',
-        'Authorized Official First Name': 'First name of the authorized official',
-        'Authorized Official Last Name': 'Last name of the authorized official',
-        'Authorized Official Telephone': 'Direct phone number of the authorized official',
-        'Practice Location Address Telephone Number': 'Main business phone number',
-        'State': 'Practice location state abbreviation',
-        'Taxonomy': 'Provider specialty classification code'
-    };
-    
-    let currentPage = 1;
-    let rowsPerPage = parseInt(localStorage.getItem('rowsPerPage') || '50');
-    
-    // --- DOM Elements ---
-    const fileInput = document.getElementById('fileInput');
-    const searchInput = document.getElementById('searchInput');
-    const tableContainer = document.getElementById('tableContainer');
-    const tableHead = document.getElementById('tableHead');
-    const tableBody = document.getElementById('tableBody');
-    const pageInfo = document.getElementById('pageInfo');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const statusBar = document.getElementById('statusBar');
-    const statusText = document.getElementById('statusText');
-    const modalOverlay = document.getElementById('modalOverlay');
-    const closeModal = document.getElementById('closeModal');
-    const exportBtn = document.getElementById('exportBtn');
-    const exportJsonBtn = document.getElementById('exportJsonBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const filterBtn = document.getElementById('filterBtn');
-    const columnsBtn = document.getElementById('columnsBtn');
-    const themeToggle = document.getElementById('themeToggle');
-    const rowsSelect = document.getElementById('rowsSelect');
-
-    // --- Icons ---
-    lucide.createIcons();
-
-    // --- Event Listeners ---
-    fileInput.addEventListener('change', handleFile);
-    searchInput.addEventListener('input', debounce(handleSearch, 300));
-    searchInput.addEventListener('focus', showSearchHistory);
-    searchInput.addEventListener('keydown', handleSearchKeydown);
-    prevBtn.addEventListener('click', () => changePage(-1));
-    nextBtn.addEventListener('click', () => changePage(1));
-    closeModal.addEventListener('click', () => modalOverlay.style.display = 'none');
-    modalOverlay.addEventListener('click', (e) => {
-        if (e.target === modalOverlay) modalOverlay.style.display = 'none';
-    });
-    resetBtn.addEventListener('click', resetSearch);
-    exportBtn.addEventListener('click', exportCSV);
-    exportJsonBtn.addEventListener('click', exportJSON);
-    filterBtn.addEventListener('click', toggleFilterSection);
-    columnsBtn.addEventListener('click', toggleColumnConfig);
-    themeToggle.addEventListener('click', toggleTheme);
-    rowsSelect.addEventListener('change', (e) => {
-        rowsPerPage = parseInt(e.target.value);
-        localStorage.setItem('rowsPerPage', rowsPerPage);
-        currentPage = 1;
-        renderTable();
-    });
-
-    // Show quick filters when data is loaded
-    function showQuickFilters() {
-        document.getElementById('quickFilters').style.display = 'flex';
-    }
-
-    function hideQuickFilters() {
-        document.getElementById('quickFilters').style.display = 'none';
-    }
-
-    // Keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-        if (e.ctrlKey && e.key === 'f') {
-            e.preventDefault();
-            searchInput.focus();
-        }
-        if (e.key === 'Escape' && modalOverlay.style.display !== 'none') {
-            modalOverlay.style.display = 'none';
-        }
-    });
-
-    // Load theme preference
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    if (savedTheme === 'light') {
-        document.body.classList.add('light-mode');
-        themeToggle.innerHTML = '<i data-lucide="sun"></i>';
-    }
-
-    // Check for session restore on page load
-    window.addEventListener('load', () => {
-        checkForSessionRestore();
-    });
-
-    // --- Key Functions ---
-
-    // Workspace Persistence Functions
-    function saveWorkspaceSession() {
-        if (rawData.length === 0) return;
-        
-        const sessionData = {
-            fileName: fileInput.files[0]?.name || 'Unknown',
-            timestamp: new Date().toLocaleString(),
-            recordCount: rawData.length,
-            filteredCount: filteredData.length,
-            currentFilters: filters,
-            selectedRows: Array.from(selectedRows),
-            searchQuery: searchInput.value,
-            currentPage: currentPage,
-            sortConfig: sortConfig,
-            visibleColumns: visibleColumns
+    <script>
+        // --- NPPES Column Mapping ---
+        const NPPES_COLUMN_MAP = {
+            'NPI': ['NPI', 'NPI Number'],
+            'legalBusinessName': ['Provider Organization Name', 'Legal Business Name', 'Provider Legal Business Name'],
+            'providerFirstName': ['Provider First Name', 'Provider First Name Name'],
+            'providerLastName': ['Provider Last Name', 'Provider Last Name Name'],
+            'authOfficialFirstName': ['Authorized Official First Name', 'Authorized Official First Name'],
+            'authOfficialLastName': ['Authorized Official Last Name', 'Authorized Official Last Name'],
+            'authOfficialPhone': ['Authorized Official Telephone Number', 'Authorized Official Telephone'],
+            'practicePhone': ['Practice Location Address Telephone Number', 'Provider Business Practice Location Address Telephone Number'],
+            'practiceAddress': ['Practice Location Address Line One', 'Provider Business Practice Location Address Line One'],
+            'practiceCity': ['Practice Location Address City', 'Provider Business Practice Location Address City'],
+            'practiceState': ['Practice Location Address State', 'Provider Business Practice Location Address State Name', 'Practice Location Address State Name'],
+            'lastUpdateDate': ['Last Update Date', 'Provider Last Update Date'],
+            'enumerationDate': ['Provider Enumeration Date', 'Enumeration Date'],
+            'taxonomyCode': ['Healthcare Provider Taxonomy Code_1', 'Provider Healthcare Provider Taxonomy Code_1']
         };
-        
-        localStorage.setItem(SESSION_KEY, JSON.stringify(sessionData));
-    }
 
-    function checkForSessionRestore() {
-        const savedSession = localStorage.getItem(SESSION_KEY);
-        if (savedSession) {
-            lastSessionData = JSON.parse(savedSession);
-            
-            // Only show if session is less than 24 hours old
-            const savedTime = new Date(lastSessionData.timestamp);
-            const hoursAgo = (new Date() - savedTime) / (1000 * 60 * 60);
-            
-            if (hoursAgo < 24) {
-                showSessionRestoreDialog(lastSessionData);
-            } else {
-                localStorage.removeItem(SESSION_KEY);
-            }
-        }
-    }
+        // Map to store detected columns for quick lookup
+        let columnMap = {};
+        let isNPPESFormat = false;
 
-    function showSessionRestoreDialog(sessionData) {
-        document.getElementById('restoreFileName').textContent = sessionData.fileName;
-        document.getElementById('restoreRecordCount').textContent = sessionData.recordCount.toLocaleString();
-        document.getElementById('restoreTimestamp').textContent = sessionData.timestamp;
-        
-        let filterCount = 0;
-        if (sessionData.currentFilters.state) filterCount++;
-        if (sessionData.currentFilters.taxonomy) filterCount++;
-        if (sessionData.currentFilters.name) filterCount++;
-        if (sessionData.currentFilters.dateFrom) filterCount++;
-        if (sessionData.currentFilters.dateTo) filterCount++;
-        document.getElementById('restoreFilterCount').textContent = filterCount > 0 ? `${filterCount} active` : 'None';
-        
-        document.getElementById('sessionRestoreOverlay').style.display = 'flex';
-    }
+        // --- State ---
+        let rawData = [];
+        let filteredData = [];
+        let headers = [];
+        let searchIndex = [];
+        let selectedRows = new Set();
+        let visibleColumns = [];
+        let filters = { dateFrom: null, dateTo: null };
+        let sortConfig = { column: null, direction: 'asc' };
+        let searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]').slice(0, 10);
+        let recentFiles = JSON.parse(localStorage.getItem('recentFiles') || '[]').slice(0, 5);
+        let currentDensity = localStorage.getItem('density') || 'normal';
+        let activeQuickFilters = new Set();
+        let pendingPreFilters = {};
+        let exportList = new Set(); // Track providers to export
+        let providerNotes = {}; // Store notes for providers
+        let lastSessionData = null; // Session restore data
 
-    function restoreSession() {
-        if (!lastSessionData) return;
-        
-        // Note: Full restoration requires file re-upload
-        // This is a limitation of browser security
-        alert('Note: You need to re-upload your file. Your filters and selections will be restored automatically.\n\n' +
-              'File was: ' + lastSessionData.fileName + '\n' +
-              'Records: ' + lastSessionData.recordCount);
-        skipSessionRestore();
-    }
+        // Workspace Persistence Keys
+        const SESSION_KEY = 'npiSearchSession';
+        const NOTES_KEY = 'providerNotes';
+        const EXPORT_LIST_KEY = 'exportList';
 
-    function skipSessionRestore() {
-        document.getElementById('sessionRestoreOverlay').style.display = 'none';
-        localStorage.removeItem(SESSION_KEY);
-        lastSessionData = null;
-    }
+        // Column description mapping for tooltips
+        const columnDescriptions = {
+            'NPI': 'National Provider Identifier - unique 10-digit number',
+            'Legal Business Name': 'The official registered name of the organization',
+            'Authorized Official First Name': 'First name of the authorized official',
+            'Authorized Official Last Name': 'Last name of the authorized official',
+            'Authorized Official Telephone': 'Direct phone number of the authorized official',
+            'Practice Location Address Telephone Number': 'Main business phone number',
+            'State': 'Practice location state abbreviation',
+            'Taxonomy': 'Provider specialty classification code'
+        };
 
-    function saveProviderNote(npi, note) {
-        if (!npi) return;
-        providerNotes[npi] = note;
-        localStorage.setItem(NOTES_KEY, JSON.stringify(providerNotes));
-    }
+        let currentPage = 1;
+        let rowsPerPage = parseInt(localStorage.getItem('rowsPerPage') || '50');
 
-    function loadProviderNotes() {
-        const saved = localStorage.getItem(NOTES_KEY);
-        if (saved) {
-            providerNotes = JSON.parse(saved);
-        }
-    }
+        // --- DOM Elements ---
+        const fileInput = document.getElementById('fileInput');
+        const searchInput = document.getElementById('searchInput');
+        const tableContainer = document.getElementById('tableContainer');
+        const tableHead = document.getElementById('tableHead');
+        const tableBody = document.getElementById('tableBody');
+        const pageInfo = document.getElementById('pageInfo');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const statusBar = document.getElementById('statusBar');
+        const statusText = document.getElementById('statusText');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const closeModal = document.getElementById('closeModal');
+        const exportBtn = document.getElementById('exportBtn');
+        const exportJsonBtn = document.getElementById('exportJsonBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const filterBtn = document.getElementById('filterBtn');
+        const columnsBtn = document.getElementById('columnsBtn');
+        const themeToggle = document.getElementById('themeToggle');
+        const rowsSelect = document.getElementById('rowsSelect');
 
-    function addToExportList(npi) {
-        if (!npi) return;
-        exportList.add(npi);
-        localStorage.setItem(EXPORT_LIST_KEY, JSON.stringify(Array.from(exportList)));
-        showStatus('Added to export list! (' + exportList.size + ' total)', false);
-        setTimeout(hideStatus, 2000);
-    }
-
-    function loadExportList() {
-        const saved = localStorage.getItem(EXPORT_LIST_KEY);
-        if (saved) {
-            exportList = new Set(JSON.parse(saved));
-        }
-    }
-
-    // Auto-save on data change
-    setInterval(() => {
-        if (rawData.length > 0) {
-            saveWorkspaceSession();
-        }
-    }, 30000); // Save every 30 seconds
-
-    // Load notes and export list on startup
-    loadProviderNotes();
-    loadExportList();
-
-    function toggleTheme() {
-        document.body.classList.toggle('light-mode');
-        const isLight = document.body.classList.contains('light-mode');
-        localStorage.setItem('theme', isLight ? 'light' : 'dark');
-        themeToggle.innerHTML = isLight ? '<i data-lucide="sun"></i>' : '<i data-lucide="moon"></i>';
+        // --- Icons ---
         lucide.createIcons();
-    }
 
-    function setRowDensity(density) {
-        currentDensity = density;
-        document.body.classList.remove('density-compact', 'density-spacious');
-        if (density !== 'normal') {
-            document.body.classList.add(`density-${density}`);
+        // --- Event Listeners ---
+        fileInput.addEventListener('change', handleFile);
+        searchInput.addEventListener('input', debounce(handleSearch, 300));
+        searchInput.addEventListener('focus', showSearchHistory);
+        searchInput.addEventListener('keydown', handleSearchKeydown);
+        prevBtn.addEventListener('click', () => changePage(-1));
+        nextBtn.addEventListener('click', () => changePage(1));
+        closeModal.addEventListener('click', () => modalOverlay.style.display = 'none');
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) modalOverlay.style.display = 'none';
+        });
+        resetBtn.addEventListener('click', resetSearch);
+        exportBtn.addEventListener('click', exportCSV);
+        exportJsonBtn.addEventListener('click', exportJSON);
+        filterBtn.addEventListener('click', toggleFilterSection);
+        columnsBtn.addEventListener('click', toggleColumnConfig);
+        themeToggle.addEventListener('click', toggleTheme);
+        rowsSelect.addEventListener('change', (e) => {
+            rowsPerPage = parseInt(e.target.value);
+            localStorage.setItem('rowsPerPage', rowsPerPage);
+            currentPage = 1;
+            renderTable();
+        });
+
+        // Show quick filters when data is loaded
+        function showQuickFilters() {
+            document.getElementById('quickFilters').style.display = 'flex';
         }
-        localStorage.setItem('density', density);
-        
-        // Update button states
-        document.querySelectorAll('.density-btn').forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.dataset.density === density) {
-                btn.classList.add('active');
+
+        function hideQuickFilters() {
+            document.getElementById('quickFilters').style.display = 'none';
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'f') {
+                e.preventDefault();
+                searchInput.focus();
+            }
+            if (e.key === 'Escape' && modalOverlay.style.display !== 'none') {
+                modalOverlay.style.display = 'none';
             }
         });
-    }
 
-    function applyQuickFilter(filterType) {
-        filters = { state: '', taxonomy: '', name: '' };
-        activeQuickFilters.clear();
-        
-        if (filterType === 'clear') {
-            applyFilters();
-            return;
+        // Load theme preference
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+            themeToggle.innerHTML = '<i data-lucide="sun"></i>';
         }
-        
-        activeQuickFilters.add(filterType);
-        
-        const orgField = headers.find(h => h.toLowerCase().includes('legal business name'));
-        const phoneField = headers.find(h => h.toLowerCase().includes('authorized official telephone'));
-        const authFirstField = headers.find(h => h.toLowerCase().includes('authorized official first name'));
-        
-        if (filterType === 'organizations') {
-            filteredData = rawData.filter(row => orgField && row[orgField] && row[orgField].trim() !== '');
-        } else if (filterType === 'missing-phone') {
-            filteredData = rawData.filter(row => !phoneField || !row[phoneField] || row[phoneField].trim() === '');
-        } else if (filterType === 'missing-official') {
-            filteredData = rawData.filter(row => !authFirstField || !row[authFirstField] || row[authFirstField].trim() === '');
-        }
-        
-        currentPage = 1;
-        updateStats();
-        renderTable();
-    }
 
-    // Load density preference
-    setRowDensity(currentDensity);
+        // Check for session restore on page load
+        window.addEventListener('load', () => {
+            checkForSessionRestore();
+        });
 
-    // Restore filters from localStorage on load
-    function restoreFiltersFromStorage() {
-        const savedFilters = JSON.parse(localStorage.getItem('filters') || '{}');
-        filters = {
-            state: savedFilters.state || '',
-            taxonomy: savedFilters.taxonomy || '',
-            name: savedFilters.name || '',
-            dateFrom: savedFilters.dateFrom ? new Date(savedFilters.dateFrom) : null,
-            dateTo: savedFilters.dateTo ? new Date(savedFilters.dateTo) : null
-        };
-        
-        const filterState = document.getElementById('filterState');
-        const filterTaxonomy = document.getElementById('filterTaxonomy');
-        const filterName = document.getElementById('filterName');
-        const filterDateFrom = document.getElementById('filterDateFrom');
-        const filterDateTo = document.getElementById('filterDateTo');
-        
-        if (filterState && savedFilters.state) filterState.value = savedFilters.state;
-        if (filterTaxonomy && savedFilters.taxonomy) filterTaxonomy.value = savedFilters.taxonomy;
-        if (filterName && savedFilters.name) filterName.value = savedFilters.name;
-        if (filterDateFrom && savedFilters.dateFrom) {
-            const d = new Date(savedFilters.dateFrom);
-            filterDateFrom.value = d.toISOString().split('T')[0];
-        }
-        if (filterDateTo && savedFilters.dateTo) {
-            const d = new Date(savedFilters.dateTo);
-            filterDateTo.value = d.toISOString().split('T')[0];
-        }
-    }
+        // --- Key Functions ---
 
-    // Restore columns from localStorage on load  
-    function restoreColumnsFromStorage() {
-        const savedColumns = JSON.parse(localStorage.getItem('visibleColumns') || '[]');
-        if (savedColumns.length > 0) {
-            visibleColumns = savedColumns;
-        }
-    }
+        // Workspace Persistence Functions
+        function saveWorkspaceSession() {
+            if (rawData.length === 0) return;
 
-    // Update recent files list
-    function updateRecentFiles(fileName) {
-        const now = new Date().toLocaleString();
-        recentFiles = recentFiles.filter(f => f.name !== fileName);
-        recentFiles.unshift({ name: fileName, time: now });
-        recentFiles = recentFiles.slice(0, 5);
-        localStorage.setItem('recentFiles', JSON.stringify(recentFiles));
-        updateRecentFilesUI();
-    }
+            const sessionData = {
+                fileName: fileInput.files[0]?.name || 'Unknown',
+                timestamp: new Date().toLocaleString(),
+                recordCount: rawData.length,
+                filteredCount: filteredData.length,
+                currentFilters: filters,
+                selectedRows: Array.from(selectedRows),
+                searchQuery: searchInput.value,
+                currentPage: currentPage,
+                sortConfig: sortConfig,
+                visibleColumns: visibleColumns
+            };
 
-    function updateRecentFilesUI() {
-        const dropdown = document.getElementById('recentFilesDropdown');
-        if (recentFiles.length === 0) {
-            dropdown.innerHTML = '<div class="recent-files-empty">No recent files</div>';
-            return;
+            localStorage.setItem(SESSION_KEY, JSON.stringify(sessionData));
         }
-        dropdown.innerHTML = recentFiles.map((f, i) => `
+
+        function checkForSessionRestore() {
+            const savedSession = localStorage.getItem(SESSION_KEY);
+            if (savedSession) {
+                lastSessionData = JSON.parse(savedSession);
+
+                // Only show if session is less than 24 hours old
+                const savedTime = new Date(lastSessionData.timestamp);
+                const hoursAgo = (new Date() - savedTime) / (1000 * 60 * 60);
+
+                if (hoursAgo < 24) {
+                    showSessionRestoreDialog(lastSessionData);
+                } else {
+                    localStorage.removeItem(SESSION_KEY);
+                }
+            }
+        }
+
+        function showSessionRestoreDialog(sessionData) {
+            document.getElementById('restoreFileName').textContent = sessionData.fileName;
+            document.getElementById('restoreRecordCount').textContent = sessionData.recordCount.toLocaleString();
+            document.getElementById('restoreTimestamp').textContent = sessionData.timestamp;
+
+            let filterCount = 0;
+            if (sessionData.currentFilters.state) filterCount++;
+            if (sessionData.currentFilters.taxonomy) filterCount++;
+            if (sessionData.currentFilters.name) filterCount++;
+            if (sessionData.currentFilters.dateFrom) filterCount++;
+            if (sessionData.currentFilters.dateTo) filterCount++;
+            document.getElementById('restoreFilterCount').textContent = filterCount > 0 ? `${filterCount} active` : 'None';
+
+            document.getElementById('sessionRestoreOverlay').style.display = 'flex';
+        }
+
+        function restoreSession() {
+            if (!lastSessionData) return;
+
+            // Note: Full restoration requires file re-upload
+            // This is a limitation of browser security
+            alert('Note: You need to re-upload your file. Your filters and selections will be restored automatically.\n\n' +
+                'File was: ' + lastSessionData.fileName + '\n' +
+                'Records: ' + lastSessionData.recordCount);
+            skipSessionRestore();
+        }
+
+        function skipSessionRestore() {
+            document.getElementById('sessionRestoreOverlay').style.display = 'none';
+            localStorage.removeItem(SESSION_KEY);
+            lastSessionData = null;
+        }
+
+        function saveProviderNote(npi, note) {
+            if (!npi) return;
+            providerNotes[npi] = note;
+            localStorage.setItem(NOTES_KEY, JSON.stringify(providerNotes));
+        }
+
+        function loadProviderNotes() {
+            const saved = localStorage.getItem(NOTES_KEY);
+            if (saved) {
+                providerNotes = JSON.parse(saved);
+            }
+        }
+
+        function addToExportList(npi) {
+            if (!npi) return;
+            exportList.add(npi);
+            localStorage.setItem(EXPORT_LIST_KEY, JSON.stringify(Array.from(exportList)));
+            showStatus('Added to export list! (' + exportList.size + ' total)', false);
+            setTimeout(hideStatus, 2000);
+        }
+
+        function loadExportList() {
+            const saved = localStorage.getItem(EXPORT_LIST_KEY);
+            if (saved) {
+                exportList = new Set(JSON.parse(saved));
+            }
+        }
+
+        // Auto-save on data change
+        setInterval(() => {
+            if (rawData.length > 0) {
+                saveWorkspaceSession();
+            }
+        }, 30000); // Save every 30 seconds
+
+        // Load notes and export list on startup
+        loadProviderNotes();
+        loadExportList();
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            themeToggle.innerHTML = isLight ? '<i data-lucide="sun"></i>' : '<i data-lucide="moon"></i>';
+            lucide.createIcons();
+        }
+
+        function setRowDensity(density) {
+            currentDensity = density;
+            document.body.classList.remove('density-compact', 'density-spacious');
+            if (density !== 'normal') {
+                document.body.classList.add(`density-${density}`);
+            }
+            localStorage.setItem('density', density);
+
+            // Update button states
+            document.querySelectorAll('.density-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.density === density) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        function applyQuickFilter(filterType) {
+            filters = { state: '', taxonomy: '', name: '' };
+            activeQuickFilters.clear();
+
+            if (filterType === 'clear') {
+                applyFilters();
+                return;
+            }
+
+            activeQuickFilters.add(filterType);
+
+            const orgField = headers.find(h => h.toLowerCase().includes('legal business name'));
+            const phoneField = headers.find(h => h.toLowerCase().includes('authorized official telephone'));
+            const authFirstField = headers.find(h => h.toLowerCase().includes('authorized official first name'));
+
+            if (filterType === 'organizations') {
+                filteredData = rawData.filter(row => orgField && row[orgField] && row[orgField].trim() !== '');
+            } else if (filterType === 'missing-phone') {
+                filteredData = rawData.filter(row => !phoneField || !row[phoneField] || row[phoneField].trim() === '');
+            } else if (filterType === 'missing-official') {
+                filteredData = rawData.filter(row => !authFirstField || !row[authFirstField] || row[authFirstField].trim() === '');
+            }
+
+            currentPage = 1;
+            updateStats();
+            renderTable();
+        }
+
+        // Load density preference
+        setRowDensity(currentDensity);
+
+        // Restore filters from localStorage on load
+        function restoreFiltersFromStorage() {
+            const savedFilters = JSON.parse(localStorage.getItem('filters') || '{}');
+            filters = {
+                state: savedFilters.state || '',
+                taxonomy: savedFilters.taxonomy || '',
+                name: savedFilters.name || '',
+                dateFrom: savedFilters.dateFrom ? new Date(savedFilters.dateFrom) : null,
+                dateTo: savedFilters.dateTo ? new Date(savedFilters.dateTo) : null
+            };
+
+            const filterState = document.getElementById('filterState');
+            const filterTaxonomy = document.getElementById('filterTaxonomy');
+            const filterName = document.getElementById('filterName');
+            const filterDateFrom = document.getElementById('filterDateFrom');
+            const filterDateTo = document.getElementById('filterDateTo');
+
+            if (filterState && savedFilters.state) filterState.value = savedFilters.state;
+            if (filterTaxonomy && savedFilters.taxonomy) filterTaxonomy.value = savedFilters.taxonomy;
+            if (filterName && savedFilters.name) filterName.value = savedFilters.name;
+            if (filterDateFrom && savedFilters.dateFrom) {
+                const d = new Date(savedFilters.dateFrom);
+                filterDateFrom.value = d.toISOString().split('T')[0];
+            }
+            if (filterDateTo && savedFilters.dateTo) {
+                const d = new Date(savedFilters.dateTo);
+                filterDateTo.value = d.toISOString().split('T')[0];
+            }
+        }
+
+        // Restore columns from localStorage on load  
+        function restoreColumnsFromStorage() {
+            const savedColumns = JSON.parse(localStorage.getItem('visibleColumns') || '[]');
+            if (savedColumns.length > 0) {
+                visibleColumns = savedColumns;
+            }
+        }
+
+        // Update recent files list
+        function updateRecentFiles(fileName) {
+            const now = new Date().toLocaleString();
+            recentFiles = recentFiles.filter(f => f.name !== fileName);
+            recentFiles.unshift({ name: fileName, time: now });
+            recentFiles = recentFiles.slice(0, 5);
+            localStorage.setItem('recentFiles', JSON.stringify(recentFiles));
+            updateRecentFilesUI();
+        }
+
+        function updateRecentFilesUI() {
+            const dropdown = document.getElementById('recentFilesDropdown');
+            if (recentFiles.length === 0) {
+                dropdown.innerHTML = '<div class="recent-files-empty">No recent files</div>';
+                return;
+            }
+            dropdown.innerHTML = recentFiles.map((f, i) => `
             <div class="recent-file-item" onclick="alert('Recent file loading feature requires backend support: ' + '${f.name}')">
                 <span>${f.name}</span>
                 <span class="recent-file-time">${f.time}</span>
             </div>
         `).join('');
-    }
-
-    // Setup recent files dropdown toggle
-    const fileUploadLabel = document.getElementById('fileUploadLabel');
-    const recentFilesDropdown = document.getElementById('recentFilesDropdown');
-    
-   fileUploadLabel.addEventListener('click', (e) => {
-        // Only show dropdown if right-clicking or clicking a specific dropdown button
-        // Let normal clicks trigger the file input
-        if (e.button === 2) { // right click
-            e.preventDefault();
-            recentFilesDropdown.classList.toggle('active');
         }
-    });
-    // Close dropdown when clicking elsewhere
-    document.addEventListener('click', (e) => {
-        if (!fileUploadLabel.contains(e.target) && !recentFilesDropdown.contains(e.target)) {
-            recentFilesDropdown.classList.remove('active');
-        }
-    });
 
-    // Initialize UI
-    updateRecentFilesUI();
+        // Setup recent files dropdown toggle
+        const fileUploadLabel = document.getElementById('fileUploadLabel');
+        const recentFilesDropdown = document.getElementById('recentFilesDropdown');
 
-    function showStatus(msg, isLoading = true) {
-        statusBar.style.display = 'flex';
-        statusText.textContent = msg;
-        document.querySelector('.spinner').style.display = isLoading ? 'block' : 'none';
-    }
-
-    function hideStatus() {
-        statusBar.style.display = 'none';
-    }
-
-    function handleFile(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        showStatus('Parsing file... this may take a moment');
-        
-        setTimeout(() => {
-            if (file.name.endsWith('.csv')) {
-                Papa.parse(file, {
-                    header: true,
-                    skipEmptyLines: true,
-                    complete: (results) => {
-                        processData(results.data, results.meta.fields);
-                    },
-                    error: (err) => {
-                        alert('Error parsing CSV: ' + err.message);
-                        hideStatus();
-                    }
-                });
-            } else if (file.name.match(/\.xls[x]?$/)) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, {type: 'array'});
-                    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const json = XLSX.utils.sheet_to_json(sheet, {header: 1});
-                    
-                    if(json.length > 0) {
-                        const keys = json[0];
-                        const rows = json.slice(1).map(row => {
-                            let obj = {};
-                            keys.forEach((k, i) => obj[k] = row[i] || "");
-                            return obj;
-                        });
-                        processData(rows, keys);
-                    }
-                };
-                reader.readAsArrayBuffer(file);
+        fileUploadLabel.addEventListener('click', (e) => {
+            // Only show dropdown if right-clicking or clicking a specific dropdown button
+            // Let normal clicks trigger the file input
+            if (e.button === 2) { // right click
+                e.preventDefault();
+                recentFilesDropdown.classList.toggle('active');
             }
-        }, 100);
-    }
+        });
+        // Close dropdown when clicking elsewhere
+        document.addEventListener('click', (e) => {
+            if (!fileUploadLabel.contains(e.target) && !recentFilesDropdown.contains(e.target)) {
+                recentFilesDropdown.classList.remove('active');
+            }
+        });
+
+        // Initialize UI
+        updateRecentFilesUI();
+
+        function showStatus(msg, isLoading = true) {
+            statusBar.style.display = 'flex';
+            statusText.textContent = msg;
+            document.querySelector('.spinner').style.display = isLoading ? 'block' : 'none';
+        }
+
+        function hideStatus() {
+            statusBar.style.display = 'none';
+        }
+
+        function handleFile(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            showStatus('Parsing file... this may take a moment');
+
+            setTimeout(() => {
+                if (file.name.endsWith('.csv')) {
+                    Papa.parse(file, {
+                        header: true,
+                        skipEmptyLines: true,
+                        complete: (results) => {
+                            processData(results.data, results.meta.fields);
+                        },
+                        error: (err) => {
+                            alert('Error parsing CSV: ' + err.message);
+                            hideStatus();
+                        }
+                    });
+                } else if (file.name.match(/\.xls[x]?$/)) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                        const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+                        if (json.length > 0) {
+                            const keys = json[0];
+                            const rows = json.slice(1).map(row => {
+                                let obj = {};
+                                keys.forEach((k, i) => obj[k] = row[i] || "");
+                                return obj;
+                            });
+                            processData(rows, keys);
+                        }
+                    };
+                    reader.readAsArrayBuffer(file);
+                }
+            }, 100);
+        }
 
 
 
-    function processData(data, fields) {
-        showStatus('Indexing data for fast search...');
-        
-        setTimeout(() => {
-            rawData = data;
-            headers = fields;
-            visibleColumns = headers.slice(0, 6);
-            
-            searchIndex = rawData.map(row => {
-                return Object.values(row).join(' ').toLowerCase();
+        function getPreferredColumns(availableHeaders) {
+            // 1. Try to load from storage first (User Preference Memory)
+            try {
+                const saved = JSON.parse(localStorage.getItem('visibleColumns') || '[]');
+                if (saved.length > 0) {
+                    // Verify these columns exist in the current file to avoid blank columns
+                    const validSaved = saved.filter(c => availableHeaders.includes(c));
+                    if (validSaved.length > 0) return validSaved;
+                }
+            } catch (e) { console.error('Error loading saved columns', e); }
+
+            // 2. Fallback to "Smart Defaults" requested by user
+            // NPI LBN State Auth Official full name auth phone
+            const keywords = [
+                ['npi'],
+                ['legal business name', 'org name', 'company', 'organization'],
+                ['state', 'location state', 'address state'],
+                ['authorized official first name', 'auth first'],
+                ['authorized official last name', 'auth last'],
+                ['authorized official telephone', 'auth phone', 'phone']
+            ];
+
+            const defaults = [];
+            keywords.forEach(alts => {
+                for (const k of alts) {
+                    // Find a header that matches one of the keywords
+                    const match = availableHeaders.find(h => h.toLowerCase().includes(k));
+                    if (match) {
+                        defaults.push(match);
+                        break;
+                    }
+                }
             });
 
-            filteredData = rawData;
-            selectedRows.clear();
-            
-            searchInput.disabled = false;
-            exportBtn.disabled = false;
-            exportJsonBtn.disabled = false;
-            resetBtn.disabled = false;
-            filterBtn.disabled = false;
-            columnsBtn.disabled = false;
-            
-            document.querySelector('.empty-state').style.display = 'none';
-            document.getElementById('dataTable').style.display = 'table';
-            document.getElementById('pagination').style.display = 'flex';
-            document.getElementById('statsBar').style.display = 'grid';
+            // Return defaults if we found at least some, otherwise fallback to first 6
+            return defaults.length > 0 ? defaults : availableHeaders.slice(0, 6);
+        }
 
-            renderHeaders();
-            buildFilterOptions();
-            buildColumnConfig();
-            updateStats();
-            currentPage = 1;
-            renderTable();
-            hideStatus();
-        }, 100);
-    }
+        function processData(data, fields) {
+            showStatus('Indexing data for fast search...');
 
-    function buildFilterOptions() {
-        const filterGroup = document.getElementById('filterGroup');
-        filterGroup.innerHTML = '';
+            setTimeout(() => {
+                rawData = data;
+                headers = fields;
+                visibleColumns = getPreferredColumns(headers);
 
-        const stateField = headers.find(h => h.toLowerCase().includes('state'));
-        const taxonomyField = headers.find(h => h.toLowerCase().includes('taxonomy'));
-        const orgField = headers.find(h => h.toLowerCase().includes('legal business name'));
+                searchIndex = rawData.map(row => {
+                    return Object.values(row).join(' ').toLowerCase();
+                });
 
-        if (stateField) {
-            const states = [...new Set(rawData.map(r => r[stateField]).filter(Boolean))].sort();
-            const html = `
+                filteredData = rawData;
+                selectedRows.clear();
+
+                searchInput.disabled = false;
+                exportBtn.disabled = false;
+                exportJsonBtn.disabled = false;
+                resetBtn.disabled = false;
+                filterBtn.disabled = false;
+                columnsBtn.disabled = false;
+
+                document.querySelector('.empty-state').style.display = 'none';
+                document.getElementById('dataTable').style.display = 'table';
+                document.getElementById('pagination').style.display = 'flex';
+                document.getElementById('statsBar').style.display = 'grid';
+
+                renderHeaders();
+                buildFilterOptions();
+                buildColumnConfig();
+                updateStats();
+                currentPage = 1;
+                renderTable();
+                hideStatus();
+            }, 100);
+        }
+
+        function buildFilterOptions() {
+            const filterGroup = document.getElementById('filterGroup');
+            filterGroup.innerHTML = '';
+
+            const stateField = headers.find(h => h.toLowerCase().includes('state'));
+            const taxonomyField = headers.find(h => h.toLowerCase().includes('taxonomy'));
+            const orgField = headers.find(h => h.toLowerCase().includes('legal business name'));
+
+            if (stateField) {
+                const states = [...new Set(rawData.map(r => r[stateField]).filter(Boolean))].sort();
+                const html = `
                 <div class="filter-item">
                     <label>State</label>
                     <select onchange="applyFilters()" id="filterState">
@@ -2126,12 +2262,12 @@
                     </select>
                 </div>
             `;
-            filterGroup.innerHTML += html;
-        }
+                filterGroup.innerHTML += html;
+            }
 
-        if (taxonomyField) {
-            const taxonomies = [...new Set(rawData.map(r => r[taxonomyField]).filter(Boolean))].sort();
-            const html = `
+            if (taxonomyField) {
+                const taxonomies = [...new Set(rawData.map(r => r[taxonomyField]).filter(Boolean))].sort();
+                const html = `
                 <div class="filter-item">
                     <label>Taxonomy (First 20)</label>
                     <select onchange="applyFilters()" id="filterTaxonomy">
@@ -2140,400 +2276,400 @@
                     </select>
                 </div>
             `;
-            filterGroup.innerHTML += html;
-        }
+                filterGroup.innerHTML += html;
+            }
 
-        const html = `
+            const html = `
             <div class="filter-item">
                 <label>Name Contains</label>
                 <input type="text" id="filterName" placeholder="Filter by name" onchange="applyFilters()">
             </div>
         `;
-        filterGroup.innerHTML += html;
-    }
+            filterGroup.innerHTML += html;
+        }
 
-    function buildColumnConfig() {
-        const columnList = document.getElementById('columnList');
-        columnList.innerHTML = '';
-        
-        headers.forEach(header => {
-            const isVisible = visibleColumns.includes(header);
-            const html = `
+        function buildColumnConfig() {
+            const columnList = document.getElementById('columnList');
+            columnList.innerHTML = '';
+
+            headers.forEach(header => {
+                const isVisible = visibleColumns.includes(header);
+                const html = `
                 <div class="column-item">
                     <input type="checkbox" id="col-${header}" ${isVisible ? 'checked' : ''} onchange="toggleColumn('${header}')">
                     <label for="col-${header}" style="margin: 0; cursor: pointer; flex: 1;">${header}</label>
                 </div>
             `;
-            columnList.innerHTML += html;
-        });
-    }
-
-    function toggleColumn(columnName) {
-        if (visibleColumns.includes(columnName)) {
-            visibleColumns = visibleColumns.filter(c => c !== columnName);
-        } else {
-            visibleColumns.push(columnName);
+                columnList.innerHTML += html;
+            });
         }
-        localStorage.setItem('visibleColumns', JSON.stringify(visibleColumns));
-        renderHeaders();
-        renderTable();
-        lucide.createIcons();
-    }
 
-    function resetColumns() {
-        visibleColumns = headers.slice(0, 6);
-        localStorage.removeItem('visibleColumns');
-        buildColumnConfig();
-        renderHeaders();
-        renderTable();
-    }
-
-    function toggleFilterSection() {
-        document.getElementById('filterSection').classList.toggle('active');
-    }
-
-    function toggleColumnConfig() {
-        document.getElementById('columnConfig').classList.toggle('active');
-    }
-
-    function clearFilters() {
-        filters = {};
-        document.getElementById('filterState').value = '';
-        document.getElementById('filterTaxonomy').value = '';
-        document.getElementById('filterName').value = '';
-        applyFilters();
-    }
-
-    function applyFilters() {
-        filters = {
-            state: document.getElementById('filterState')?.value || '',
-            taxonomy: document.getElementById('filterTaxonomy')?.value || '',
-            name: document.getElementById('filterName')?.value || ''
-        };
-
-        const stateField = headers.find(h => h.toLowerCase().includes('state'));
-        const taxonomyField = headers.find(h => h.toLowerCase().includes('taxonomy'));
-        const orgField = headers.find(h => h.toLowerCase().includes('legal business name'));
-
-        filteredData = rawData.filter(row => {
-            if (filters.state && stateField && row[stateField] !== filters.state) return false;
-            if (filters.taxonomy && taxonomyField && row[taxonomyField] !== filters.taxonomy) return false;
-            if (filters.name && orgField && !row[orgField]?.toLowerCase().includes(filters.name.toLowerCase())) return false;
-            return true;
-        });
-
-        currentPage = 1;
-        updateStats();
-        renderTable();
-    }
-
-    function normalizePhoneNumber(phone) {
-        return phone.replace(/\D/g, '');
-    }
-
-    function handleSearch() {
-        const query = searchInput.value.toLowerCase().trim();
-        const normalizedQuery = normalizePhoneNumber(query);
-        const isPhoneSearch = query.length >= 10 && normalizedQuery.length >= 10 && /^\d+$/.test(normalizedQuery);
-        
-        if (!query) {
-            filteredData = rawData;
-        } else {
-            const indices = [];
-            for(let i = 0; i < searchIndex.length; i++) {
-                let matches = searchIndex[i].includes(query);
-                if (!matches && isPhoneSearch) {
-                    const normalizedIndex = normalizePhoneNumber(searchIndex[i]);
-                    matches = normalizedIndex.includes(normalizedQuery);
-                }
-                if(matches) {
-                    indices.push(i);
-                }
+        function toggleColumn(columnName) {
+            if (visibleColumns.includes(columnName)) {
+                visibleColumns = visibleColumns.filter(c => c !== columnName);
+            } else {
+                visibleColumns.push(columnName);
             }
-            filteredData = indices.map(i => rawData[i]);
+            localStorage.setItem('visibleColumns', JSON.stringify(visibleColumns));
+            renderHeaders();
+            renderTable();
+            lucide.createIcons();
         }
-        
-        if (query && !searchHistory.includes(query)) {
-            searchHistory.unshift(query);
-            searchHistory = searchHistory.slice(0, 10);
-            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+
+        function resetColumns() {
+            visibleColumns = headers.slice(0, 6);
+            localStorage.removeItem('visibleColumns');
+            buildColumnConfig();
+            renderHeaders();
+            renderTable();
         }
-        
-        currentPage = 1;
-        selectedRows.clear();
-        updateStats();
-        renderTable();
-    }
 
-    function handleSearchKeydown(e) {
-        if (e.key === 'Enter') {
-            const firstResult = document.querySelector('tbody tr');
-            if (firstResult) {
-                firstResult.click();
-            }
+        function toggleFilterSection() {
+            document.getElementById('filterSection').classList.toggle('active');
         }
-    }
 
-    function showSearchHistory() {
-        const dropdown = document.getElementById('searchHistory');
-        if (searchHistory.length > 0) {
-            dropdown.innerHTML = searchHistory.map(item => 
-                `<div class="search-history-item" onclick="searchInput.value='${item}'; handleSearch();">${item}</div>`
-            ).join('');
-            dropdown.style.display = 'block';
+        function toggleColumnConfig() {
+            document.getElementById('columnConfig').classList.toggle('active');
         }
-    }
 
-    function changePage(dir) {
-        currentPage += dir;
-        renderTable();
-        tableContainer.scrollTop = 0;
-    }
+        function clearFilters() {
+            filters = {};
+            document.getElementById('filterState').value = '';
+            document.getElementById('filterTaxonomy').value = '';
+            document.getElementById('filterName').value = '';
+            applyFilters();
+        }
 
-    function debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
+        function applyFilters() {
+            filters = {
+                state: document.getElementById('filterState')?.value || '',
+                taxonomy: document.getElementById('filterTaxonomy')?.value || '',
+                name: document.getElementById('filterName')?.value || ''
             };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    }
 
-    function renderHeaders() {
-        let html = '<tr><th style="width: 30px;"><input type="checkbox" id="selectAll" onchange="toggleSelectAll()"></th>';
-        visibleColumns.forEach(h => {
-            html += `<th class="sortable" onclick="sortTable('${h}')">${h}</th>`;
-        });
-        html += '<th>Action</th></tr>';
-        tableHead.innerHTML = html;
-    }
+            const stateField = headers.find(h => h.toLowerCase().includes('state'));
+            const taxonomyField = headers.find(h => h.toLowerCase().includes('taxonomy'));
+            const orgField = headers.find(h => h.toLowerCase().includes('legal business name'));
 
-    function sortTable(columnName) {
-        if (sortConfig.column === columnName) {
-            sortConfig.direction = sortConfig.direction === 'asc' ? 'desc' : 'asc';
-        } else {
-            sortConfig.column = columnName;
-            sortConfig.direction = 'asc';
-        }
-
-        filteredData.sort((a, b) => {
-            const aVal = a[columnName];
-            const bVal = b[columnName];
-            const comparison = String(aVal).localeCompare(String(bVal), undefined, { numeric: true });
-            return sortConfig.direction === 'asc' ? comparison : -comparison;
-        });
-
-        currentPage = 1;
-        renderTable();
-    }
-
-    function renderTable() {
-        const start = (currentPage - 1) * rowsPerPage;
-        const end = start + rowsPerPage;
-        const pageData = filteredData.slice(start, end);
-
-        tableBody.innerHTML = '';
-
-        if (pageData.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="100%" style="text-align:center; padding: 20px;">No results found</td></tr>';
-            pageInfo.textContent = '0 results';
-            return;
-        }
-
-        const fragment = document.createDocumentFragment();
-
-        pageData.forEach((row, index) => {
-            const realIndex = start + index;
-            const rowId = `row-${realIndex}`;
-            const tr = document.createElement('tr');
-            if (selectedRows.has(rowId)) {
-                tr.classList.add('selected');
-            }
-
-            const checkboxTd = document.createElement('td');
-            checkboxTd.className = 'checkbox-cell';
-            checkboxTd.innerHTML = `<input type="checkbox" id="${rowId}" onchange="toggleRowSelect('${rowId}')" ${selectedRows.has(rowId) ? 'checked' : ''}>`;
-            tr.appendChild(checkboxTd);
-
-            visibleColumns.forEach(key => {
-                const td = document.createElement('td');
-                td.textContent = row[key];
-                if (key.toLowerCase().includes('legal business name') || key.toLowerCase().includes('npi')) {
-                    td.classList.add('col-primary');
-                }
-                tr.appendChild(td);
+            filteredData = rawData.filter(row => {
+                if (filters.state && stateField && row[stateField] !== filters.state) return false;
+                if (filters.taxonomy && taxonomyField && row[taxonomyField] !== filters.taxonomy) return false;
+                if (filters.name && orgField && !row[orgField]?.toLowerCase().includes(filters.name.toLowerCase())) return false;
+                return true;
             });
 
-            const actionTd = document.createElement('td');
-            actionTd.innerHTML = '<span style="color:var(--accent); font-size: 0.8rem;">View Card</span>';
-            tr.onclick = (e) => {
-                if (e.target.tagName !== 'INPUT') {
-                    openModal(row);
-                }
-            };
-            tr.appendChild(actionTd);
-
-            fragment.appendChild(tr);
-        });
-
-        tableBody.appendChild(fragment);
-
-        pageInfo.textContent = `Showing ${start + 1}-${Math.min(end, filteredData.length)} of ${filteredData.length}`;
-        prevBtn.disabled = currentPage === 1;
-        nextBtn.disabled = end >= filteredData.length;
-    }
-
-    function toggleRowSelect(rowId) {
-        if (selectedRows.has(rowId)) {
-            selectedRows.delete(rowId);
-        } else {
-            selectedRows.add(rowId);
-        }
-        updateBulkActions();
-        renderTable();
-    }
-
-    function toggleSelectAll() {
-        const checkbox = document.getElementById('selectAll');
-        const start = (currentPage - 1) * rowsPerPage;
-        
-        if (checkbox.checked) {
-            for (let i = 0; i < Math.min(rowsPerPage, filteredData.length); i++) {
-                selectedRows.add(`row-${start + i}`);
-            }
-        } else {
-            for (let i = 0; i < Math.min(rowsPerPage, filteredData.length); i++) {
-                selectedRows.delete(`row-${start + i}`);
-            }
-        }
-        updateBulkActions();
-        renderTable();
-    }
-
-    function updateBulkActions() {
-        const bulkActions = document.getElementById('bulkActions');
-        if (selectedRows.size > 0) {
-            bulkActions.classList.add('active');
-            document.getElementById('bulkCount').textContent = `${selectedRows.size} selected`;
-        } else {
-            bulkActions.classList.remove('active');
-        }
-    }
-
-    function bulkCopyNameAndPhone() {
-        const authNameField = headers.find(h => h.toLowerCase().includes('authorized official first name'));
-        const authLastField = headers.find(h => h.toLowerCase().includes('authorized official last name'));
-        const authPhoneField = headers.find(h => h.toLowerCase().includes('authorized official telephone'));
-
-        let toCopy = '';
-        const start = (currentPage - 1) * rowsPerPage;
-        
-        selectedRows.forEach(rowId => {
-            const index = parseInt(rowId.split('-')[1]);
-            const row = filteredData[index];
-            if (row) {
-                const first = authNameField ? row[authNameField] : 'N/A';
-                const last = authLastField ? row[authLastField] : 'N/A';
-                const phone = authPhoneField ? row[authPhoneField] : 'N/A';
-                toCopy += `${first} ${last}\t${phone}\n`;
-            }
-        });
-
-        navigator.clipboard.writeText(toCopy);
-        showStatus(`Copied ${selectedRows.size} names and phones!`, false);
-        setTimeout(hideStatus, 1500);
-    }
-
-    function bulkExport() {
-        const start = (currentPage - 1) * rowsPerPage;
-        const selectedData = [];
-        
-        selectedRows.forEach(rowId => {
-            const index = parseInt(rowId.split('-')[1]);
-            if (filteredData[index]) {
-                selectedData.push(filteredData[index]);
-            }
-        });
-
-        const csv = Papa.unparse(selectedData);
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'selected_npi_data.csv';
-        link.click();
-    }
-
-    function updateStats() {
-        const orgField = headers.find(h => h.toLowerCase().includes('legal business name'));
-        const stateField = headers.find(h => h.toLowerCase().includes('state'));
-
-        document.getElementById('totalRows').textContent = rawData.length;
-        document.getElementById('filteredRows').textContent = filteredData.length;
-        
-        if (orgField) {
-            const uniqueOrgs = new Set(filteredData.map(r => r[orgField]).filter(Boolean)).size;
-            document.getElementById('uniqueOrgs').textContent = uniqueOrgs;
+            currentPage = 1;
+            updateStats();
+            renderTable();
         }
 
-        if (stateField) {
-            const uniqueStates = new Set(filteredData.map(r => r[stateField]).filter(Boolean)).size;
-            document.getElementById('uniqueStates').textContent = uniqueStates;
+        function normalizePhoneNumber(phone) {
+            return phone.replace(/\D/g, '');
         }
-    }
 
-    function resetSearch() {
-        searchInput.value = '';
-        filters = {};
-        activeQuickFilters.clear();
-        selectedRows.clear();
-        sortConfig = { column: null, direction: 'asc' };
-        document.getElementById('filterState').value = '';
-        document.getElementById('filterTaxonomy').value = '';
-        document.getElementById('filterName').value = '';
-        document.getElementById('filterDateFrom').value = '';
-        document.getElementById('filterDateTo').value = '';
-        filteredData = rawData;
-        currentPage = 1;
-        localStorage.removeItem('filters');
-        updateStats();
-        renderTable();
-        updateBulkActions();
-        saveWorkspaceSession();
-    }
+        function handleSearch() {
+            const query = searchInput.value.toLowerCase().trim();
+            const normalizedQuery = normalizePhoneNumber(query);
+            const isPhoneSearch = query.length >= 10 && normalizedQuery.length >= 10 && /^\d+$/.test(normalizedQuery);
 
-    function openModal(row) {
-        const getVal = (keywords) => {
-            // First check columnMap for NPPES format
-            for (const keyword of keywords) {
-                for (const [mapKey, mapValue] of Object.entries(columnMap)) {
-                    if (keyword.toLowerCase().includes(mapKey.toLowerCase()) && mapValue) {
-                        return row[mapValue] || 'N/A';
+            if (!query) {
+                filteredData = rawData;
+            } else {
+                const indices = [];
+                for (let i = 0; i < searchIndex.length; i++) {
+                    let matches = searchIndex[i].includes(query);
+                    if (!matches && isPhoneSearch) {
+                        const normalizedIndex = normalizePhoneNumber(searchIndex[i]);
+                        matches = normalizedIndex.includes(normalizedQuery);
+                    }
+                    if (matches) {
+                        indices.push(i);
                     }
                 }
+                filteredData = indices.map(i => rawData[i]);
             }
-            // Fallback to header search
-            const key = headers.find(h => keywords.some(k => h.toLowerCase().includes(k.toLowerCase())));
-            return key ? row[key] : 'N/A';
-        };
-        
-        const authFirst = getVal(['Authorized Official First Name', 'Auth Official First']);
-        const authLast = getVal(['Authorized Official Last Name', 'Auth Official Last']);
-        const authTitle = getVal(['Authorized Official Title', 'Auth Official Title']);
-        const authPhone = getVal(['Authorized Official Telephone', 'Auth Official Phone']);
-        const orgName = getVal(['Legal Business Name', 'Organization Name', 'Provider Organization Name']);
-        const npi = getVal(['NPI']);
-        const address1 = getVal(['Practice Location Address', 'Physical Address']);
-        const city = getVal(['Practice Location Address City', 'City Name']);
-        const state = getVal(['Practice Location Address State', 'State Code']);
-        const phone = getVal(['Practice Location Address Telephone', 'Provider Business Practice Location Address Telephone Number']);
 
-        document.getElementById('modalTitle').textContent = (authFirst !== 'N/A') ? `${authFirst} ${authLast}` : (orgName !== 'N/A' ? orgName : 'Unknown Provider');
-        document.getElementById('modalSubtitle').textContent = `NPI: ${npi}`;
+            if (query && !searchHistory.includes(query)) {
+                searchHistory.unshift(query);
+                searchHistory = searchHistory.slice(0, 10);
+                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            }
 
-        const html = `
+            currentPage = 1;
+            selectedRows.clear();
+            updateStats();
+            renderTable();
+        }
+
+        function handleSearchKeydown(e) {
+            if (e.key === 'Enter') {
+                const firstResult = document.querySelector('tbody tr');
+                if (firstResult) {
+                    firstResult.click();
+                }
+            }
+        }
+
+        function showSearchHistory() {
+            const dropdown = document.getElementById('searchHistory');
+            if (searchHistory.length > 0) {
+                dropdown.innerHTML = searchHistory.map(item =>
+                    `<div class="search-history-item" onclick="searchInput.value='${item}'; handleSearch();">${item}</div>`
+                ).join('');
+                dropdown.style.display = 'block';
+            }
+        }
+
+        function changePage(dir) {
+            currentPage += dir;
+            renderTable();
+            tableContainer.scrollTop = 0;
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function renderHeaders() {
+            let html = '<tr><th style="width: 30px;"><input type="checkbox" id="selectAll" onchange="toggleSelectAll()"></th>';
+            visibleColumns.forEach(h => {
+                html += `<th class="sortable" onclick="sortTable('${h}')">${h}</th>`;
+            });
+            html += '<th>Action</th></tr>';
+            tableHead.innerHTML = html;
+        }
+
+        function sortTable(columnName) {
+            if (sortConfig.column === columnName) {
+                sortConfig.direction = sortConfig.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortConfig.column = columnName;
+                sortConfig.direction = 'asc';
+            }
+
+            filteredData.sort((a, b) => {
+                const aVal = a[columnName];
+                const bVal = b[columnName];
+                const comparison = String(aVal).localeCompare(String(bVal), undefined, { numeric: true });
+                return sortConfig.direction === 'asc' ? comparison : -comparison;
+            });
+
+            currentPage = 1;
+            renderTable();
+        }
+
+        function renderTable() {
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const pageData = filteredData.slice(start, end);
+
+            tableBody.innerHTML = '';
+
+            if (pageData.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="100%" style="text-align:center; padding: 20px;">No results found</td></tr>';
+                pageInfo.textContent = '0 results';
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+
+            pageData.forEach((row, index) => {
+                const realIndex = start + index;
+                const rowId = `row-${realIndex}`;
+                const tr = document.createElement('tr');
+                if (selectedRows.has(rowId)) {
+                    tr.classList.add('selected');
+                }
+
+                const checkboxTd = document.createElement('td');
+                checkboxTd.className = 'checkbox-cell';
+                checkboxTd.innerHTML = `<input type="checkbox" id="${rowId}" onchange="toggleRowSelect('${rowId}')" ${selectedRows.has(rowId) ? 'checked' : ''}>`;
+                tr.appendChild(checkboxTd);
+
+                visibleColumns.forEach(key => {
+                    const td = document.createElement('td');
+                    td.textContent = row[key];
+                    if (key.toLowerCase().includes('legal business name') || key.toLowerCase().includes('npi')) {
+                        td.classList.add('col-primary');
+                    }
+                    tr.appendChild(td);
+                });
+
+                const actionTd = document.createElement('td');
+                actionTd.innerHTML = '<span style="color:var(--accent); font-size: 0.8rem;">View Card</span>';
+                tr.onclick = (e) => {
+                    if (e.target.tagName !== 'INPUT') {
+                        openModal(row);
+                    }
+                };
+                tr.appendChild(actionTd);
+
+                fragment.appendChild(tr);
+            });
+
+            tableBody.appendChild(fragment);
+
+            pageInfo.textContent = `Showing ${start + 1}-${Math.min(end, filteredData.length)} of ${filteredData.length}`;
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = end >= filteredData.length;
+        }
+
+        function toggleRowSelect(rowId) {
+            if (selectedRows.has(rowId)) {
+                selectedRows.delete(rowId);
+            } else {
+                selectedRows.add(rowId);
+            }
+            updateBulkActions();
+            renderTable();
+        }
+
+        function toggleSelectAll() {
+            const checkbox = document.getElementById('selectAll');
+            const start = (currentPage - 1) * rowsPerPage;
+
+            if (checkbox.checked) {
+                for (let i = 0; i < Math.min(rowsPerPage, filteredData.length); i++) {
+                    selectedRows.add(`row-${start + i}`);
+                }
+            } else {
+                for (let i = 0; i < Math.min(rowsPerPage, filteredData.length); i++) {
+                    selectedRows.delete(`row-${start + i}`);
+                }
+            }
+            updateBulkActions();
+            renderTable();
+        }
+
+        function updateBulkActions() {
+            const bulkActions = document.getElementById('bulkActions');
+            if (selectedRows.size > 0) {
+                bulkActions.classList.add('active');
+                document.getElementById('bulkCount').textContent = `${selectedRows.size} selected`;
+            } else {
+                bulkActions.classList.remove('active');
+            }
+        }
+
+        function bulkCopyNameAndPhone() {
+            const authNameField = headers.find(h => h.toLowerCase().includes('authorized official first name'));
+            const authLastField = headers.find(h => h.toLowerCase().includes('authorized official last name'));
+            const authPhoneField = headers.find(h => h.toLowerCase().includes('authorized official telephone'));
+
+            let toCopy = '';
+            const start = (currentPage - 1) * rowsPerPage;
+
+            selectedRows.forEach(rowId => {
+                const index = parseInt(rowId.split('-')[1]);
+                const row = filteredData[index];
+                if (row) {
+                    const first = authNameField ? row[authNameField] : 'N/A';
+                    const last = authLastField ? row[authLastField] : 'N/A';
+                    const phone = authPhoneField ? row[authPhoneField] : 'N/A';
+                    toCopy += `${first} ${last}\t${phone}\n`;
+                }
+            });
+
+            navigator.clipboard.writeText(toCopy);
+            showStatus(`Copied ${selectedRows.size} names and phones!`, false);
+            setTimeout(hideStatus, 1500);
+        }
+
+        function bulkExport() {
+            const start = (currentPage - 1) * rowsPerPage;
+            const selectedData = [];
+
+            selectedRows.forEach(rowId => {
+                const index = parseInt(rowId.split('-')[1]);
+                if (filteredData[index]) {
+                    selectedData.push(filteredData[index]);
+                }
+            });
+
+            const csv = Papa.unparse(selectedData);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'selected_npi_data.csv';
+            link.click();
+        }
+
+        function updateStats() {
+            const orgField = headers.find(h => h.toLowerCase().includes('legal business name'));
+            const stateField = headers.find(h => h.toLowerCase().includes('state'));
+
+            document.getElementById('totalRows').textContent = rawData.length;
+            document.getElementById('filteredRows').textContent = filteredData.length;
+
+            if (orgField) {
+                const uniqueOrgs = new Set(filteredData.map(r => r[orgField]).filter(Boolean)).size;
+                document.getElementById('uniqueOrgs').textContent = uniqueOrgs;
+            }
+
+            if (stateField) {
+                const uniqueStates = new Set(filteredData.map(r => r[stateField]).filter(Boolean)).size;
+                document.getElementById('uniqueStates').textContent = uniqueStates;
+            }
+        }
+
+        function resetSearch() {
+            searchInput.value = '';
+            filters = {};
+            activeQuickFilters.clear();
+            selectedRows.clear();
+            sortConfig = { column: null, direction: 'asc' };
+            document.getElementById('filterState').value = '';
+            document.getElementById('filterTaxonomy').value = '';
+            document.getElementById('filterName').value = '';
+            document.getElementById('filterDateFrom').value = '';
+            document.getElementById('filterDateTo').value = '';
+            filteredData = rawData;
+            currentPage = 1;
+            localStorage.removeItem('filters');
+            updateStats();
+            renderTable();
+            updateBulkActions();
+            saveWorkspaceSession();
+        }
+
+        function openModal(row) {
+            const getVal = (keywords) => {
+                // First check columnMap for NPPES format
+                for (const keyword of keywords) {
+                    for (const [mapKey, mapValue] of Object.entries(columnMap)) {
+                        if (keyword.toLowerCase().includes(mapKey.toLowerCase()) && mapValue) {
+                            return row[mapValue] || 'N/A';
+                        }
+                    }
+                }
+                // Fallback to header search
+                const key = headers.find(h => keywords.some(k => h.toLowerCase().includes(k.toLowerCase())));
+                return key ? row[key] : 'N/A';
+            };
+
+            const authFirst = getVal(['Authorized Official First Name', 'Auth Official First']);
+            const authLast = getVal(['Authorized Official Last Name', 'Auth Official Last']);
+            const authTitle = getVal(['Authorized Official Title', 'Auth Official Title']);
+            const authPhone = getVal(['Authorized Official Telephone', 'Auth Official Phone']);
+            const orgName = getVal(['Legal Business Name', 'Organization Name', 'Provider Organization Name']);
+            const npi = getVal(['NPI']);
+            const address1 = getVal(['Practice Location Address', 'Physical Address']);
+            const city = getVal(['Practice Location Address City', 'City Name']);
+            const state = getVal(['Practice Location Address State', 'State Code']);
+            const phone = getVal(['Practice Location Address Telephone', 'Provider Business Practice Location Address Telephone Number']);
+
+            document.getElementById('modalTitle').textContent = (authFirst !== 'N/A') ? `${authFirst} ${authLast}` : (orgName !== 'N/A' ? orgName : 'Unknown Provider');
+            document.getElementById('modalSubtitle').textContent = `NPI: ${npi}`;
+
+            const html = `
             <div class="card-section">
                 <div class="section-title"><i data-lucide="building"></i> Organization Details</div>
                 <div class="info-grid">
@@ -2583,111 +2719,112 @@
             <div class="card-section">
                 <div class="section-title"><i data-lucide="file-text"></i> Raw Data (All Fields)</div>
                 <div style="font-size: 0.8rem; color: #aaa; max-height: 200px; overflow-y: scroll;">
-                    ${Object.entries(row).map(([k,v]) => `<div style="margin-bottom: 5px;"><strong style="color:var(--accent)">${k}:</strong> ${v}</div>`).join('')}
+                    ${Object.entries(row).map(([k, v]) => `<div style="margin-bottom: 5px;"><strong style="color:var(--accent)">${k}:</strong> ${v}</div>`).join('')}
                 </div>
             </div>
         `;
 
-        document.getElementById('modalBody').innerHTML = html;
-        lucide.createIcons();
-        modalOverlay.style.display = 'flex';
-    }
+            document.getElementById('modalBody').innerHTML = html;
+            lucide.createIcons();
+            modalOverlay.style.display = 'flex';
+        }
 
-    function copyText(text) {
-        navigator.clipboard.writeText(text);
-        showStatus('Copied to clipboard!', false);
-        setTimeout(hideStatus, 1500);
-    }
+        function copyText(text) {
+            navigator.clipboard.writeText(text);
+            showStatus('Copied to clipboard!', false);
+            setTimeout(hideStatus, 1500);
+        }
 
-    function copyNameAndPhone(name, phone) {
-        const tabSeparated = `${name}\t${phone}`;
-        navigator.clipboard.writeText(tabSeparated);
-        showStatus('Name and phone copied! Paste in Google Sheets.', false);
-        setTimeout(hideStatus, 2000);
-    }
+        function copyNameAndPhone(name, phone) {
+            const tabSeparated = `${name}\t${phone}`;
+            navigator.clipboard.writeText(tabSeparated);
+            showStatus('Name and phone copied! Paste in Google Sheets.', false);
+            setTimeout(hideStatus, 2000);
+        }
 
-    function copyAsTabSeparated(...fields) {
-        const text = fields.map(f => (f || 'N/A').toString()).join('\t');
-        navigator.clipboard.writeText(text);
-        showStatus('Copied as tab-separated values!', false);
-        setTimeout(hideStatus, 1500);
-    }
+        function copyAsTabSeparated(...fields) {
+            const text = fields.map(f => (f || 'N/A').toString()).join('\t');
+            navigator.clipboard.writeText(text);
+            showStatus('Copied as tab-separated values!', false);
+            setTimeout(hideStatus, 1500);
+        }
 
-    function copyAsCSV(...fields) {
-        const escaped = fields.map(f => {
-            const str = (f || 'N/A').toString();
-            return str.includes(',') || str.includes('"') ? `"${str.replace(/"/g, '""')}"` : str;
-        }).join(',');
-        navigator.clipboard.writeText(escaped);
-        showStatus('Copied as CSV format!', false);
-        setTimeout(hideStatus, 1500);
-    }
+        function copyAsCSV(...fields) {
+            const escaped = fields.map(f => {
+                const str = (f || 'N/A').toString();
+                return str.includes(',') || str.includes('"') ? `"${str.replace(/"/g, '""')}"` : str;
+            }).join(',');
+            navigator.clipboard.writeText(escaped);
+            showStatus('Copied as CSV format!', false);
+            setTimeout(hideStatus, 1500);
+        }
 
-    function copyAsVCard(firstName, lastName, phone, org) {
-        const vcard = `BEGIN:VCARD
+        function copyAsVCard(firstName, lastName, phone, org) {
+            const vcard = `BEGIN:VCARD
 VERSION:3.0
 FN:${firstName} ${lastName}
 N:${lastName};${firstName}
 ORG:${org}
 TEL:${phone}
 END:VCARD`;
-        navigator.clipboard.writeText(vcard);
-        showStatus('vCard copied! Import into Contacts.', false);
-        setTimeout(hideStatus, 1500);
-    }
+            navigator.clipboard.writeText(vcard);
+            showStatus('vCard copied! Import into Contacts.', false);
+            setTimeout(hideStatus, 1500);
+        }
 
-    function shareVCard(firstName, lastName, phone, org) {
-        const vcard = `BEGIN:VCARD
+        function shareVCard(firstName, lastName, phone, org) {
+            const vcard = `BEGIN:VCARD
 VERSION:3.0
 FN:${firstName} ${lastName}
 N:${lastName};${firstName}
 ORG:${org}
 TEL:${phone}
 END:VCARD`;
-        const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `${firstName}_${lastName}.vcf`;
-        link.click();
-    }
+            const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `${firstName}_${lastName}.vcf`;
+            link.click();
+        }
 
-    function exportCSV() {
-        let dataToExport = filteredData;
-        
-        // If export list has items, export those instead
-        if (exportList.size > 0) {
-            const npiField = columnMap['NPI'] || headers.find(h => h.toLowerCase().includes('npi'));
-            if (npiField) {
-                dataToExport = filteredData.filter(row => exportList.has(row[npiField]));
-                if (dataToExport.length === 0) {
-                    alert('No records from your export list found in current filtered view.');
-                    return;
+        function exportCSV() {
+            let dataToExport = filteredData;
+
+            // If export list has items, export those instead
+            if (exportList.size > 0) {
+                const npiField = columnMap['NPI'] || headers.find(h => h.toLowerCase().includes('npi'));
+                if (npiField) {
+                    dataToExport = filteredData.filter(row => exportList.has(row[npiField]));
+                    if (dataToExport.length === 0) {
+                        alert('No records from your export list found in current filtered view.');
+                        return;
+                    }
                 }
             }
-        }
-        
-        if (dataToExport.length === 0) return;
-        
-        const csv = Papa.unparse(dataToExport);
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `npi_data_${new Date().toISOString().split('T')[0]}.csv`;
-        link.click();
-        
-        showStatus(`Exported ${dataToExport.length} records!`, false);
-        setTimeout(hideStatus, 1500);
-    }
 
-    function exportJSON() {
-        if (filteredData.length === 0) return;
-        const json = JSON.stringify(filteredData, null, 2);
-        const blob = new Blob([json], { type: 'application/json;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `npi_data_${new Date().toISOString().split('T')[0]}.json`;
-        link.click();
-    }
-</script>
+            if (dataToExport.length === 0) return;
+
+            const csv = Papa.unparse(dataToExport);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `npi_data_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+
+            showStatus(`Exported ${dataToExport.length} records!`, false);
+            setTimeout(hideStatus, 1500);
+        }
+
+        function exportJSON() {
+            if (filteredData.length === 0) return;
+            const json = JSON.stringify(filteredData, null, 2);
+            const blob = new Blob([json], { type: 'application/json;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `npi_data_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+        }
+    </script>
 </body>
+
 </html>

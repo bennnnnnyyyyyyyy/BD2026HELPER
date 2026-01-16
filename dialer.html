@@ -505,7 +505,7 @@
         <header>
             <div>
                 <a href="homepage.html" class="back-link">← Back to Hub</a>
-                <div class="logo">📞 POWER DIALER</div>
+                <div class="logo">📞 DME DIALER</div>
             </div>
             <div class="stats">
                 <div class="stat">
@@ -569,6 +569,10 @@
                         <label>State</label>
                         <span id="leadState">--</span>
                     </div>
+                    <div class="detail-item">
+                        <label>Local Time</label>
+                        <span id="leadTime">--</span>
+                    </div>
                     <div class="detail-item" style="grid-column: 1 / -1;">
                         <label>Comment History</label>
                         <div class="comments-history" id="leadComments">--</div>
@@ -599,6 +603,8 @@
 
                     <div class="nav-btns">
                         <button class="btn btn-secondary" id="prevBtn">← PREV</button>
+                        <button class="btn btn-secondary" id="randomBtn" title="Jump to a random lead">🎲
+                            RANDOM</button>
                         <button class="btn" id="nextBtn">NEXT →</button>
                     </div>
                 </div>
@@ -617,6 +623,30 @@
 
             let columnMap = { phone: 0, name: 1, company: 2, comments: -1 };
             let stats = { total: 0, called: 0, connected: 0 };
+            let timeUpdateInterval;
+
+            const STATE_TIMEZONES = {
+                'AL': 'America/Chicago', 'AK': 'America/Anchorage', 'AZ': 'America/Phoenix',
+                'AR': 'America/Chicago', 'CA': 'America/Los_Angeles', 'CO': 'America/Denver',
+                'CT': 'America/New_York', 'DE': 'America/New_York', 'DC': 'America/New_York',
+                'FL': { tz: 'America/New_York', split: true }, // Most pop in Eastern
+                'GA': 'America/New_York', 'HI': 'Pacific/Honolulu', 'ID': { tz: 'America/Denver', split: true },
+                'IL': 'America/Chicago', 'IN': { tz: 'America/Indianapolis', split: true },
+                'IA': 'America/Chicago', 'KS': { tz: 'America/Chicago', split: true },
+                'KY': { tz: 'America/New_York', split: true }, 'LA': 'America/Chicago',
+                'ME': 'America/New_York', 'MD': 'America/New_York', 'MA': 'America/New_York',
+                'MI': { tz: 'America/Detroit', split: true }, 'MN': 'America/Chicago',
+                'MS': 'America/Chicago', 'MO': 'America/Chicago', 'MT': 'America/Denver',
+                'NE': { tz: 'America/Chicago', split: true }, 'NV': 'America/Los_Angeles',
+                'NH': 'America/New_York', 'NJ': 'America/New_York', 'NM': 'America/Denver',
+                'NY': 'America/New_York', 'NC': 'America/New_York', 'ND': { tz: 'America/Chicago', split: true },
+                'OH': 'America/New_York', 'OK': 'America/Chicago', 'OR': { tz: 'America/Los_Angeles', split: true },
+                'PA': 'America/New_York', 'RI': 'America/New_York', 'SC': 'America/New_York',
+                'SD': { tz: 'America/Chicago', split: true }, 'TN': { tz: 'America/Chicago', split: true },
+                'TX': { tz: 'America/Chicago', split: true }, 'UT': 'America/Denver',
+                'VT': 'America/New_York', 'VA': 'America/New_York', 'WA': 'America/Los_Angeles',
+                'WV': 'America/New_York', 'WI': 'America/Chicago', 'WY': 'America/Denver'
+            };
 
 
             const uploadZone = document.getElementById('uploadZone');
@@ -771,6 +801,47 @@
                 document.getElementById('leadIndex').textContent = `${index + 1} / ${csvData.length}`;
                 document.getElementById('notesInput').value = ''; // Always clear notes input for new lead
                 document.getElementById('progressText').textContent = `${stats.called} / ${stats.total} completed`;
+
+                updateTimeDisplay(lead._enriched.state || lead['State']);
+            }
+
+            function updateTimeDisplay(stateCode) {
+                const timeEl = document.getElementById('leadTime');
+                if (timeUpdateInterval) clearInterval(timeUpdateInterval);
+
+                if (!stateCode || stateCode.length !== 2) {
+                    timeEl.textContent = '--';
+                    return;
+                }
+
+                const code = stateCode.toUpperCase().trim();
+                const tzInfo = STATE_TIMEZONES[code];
+
+                if (!tzInfo) {
+                    timeEl.textContent = 'Unknown State';
+                    return;
+                }
+
+                const timeZone = typeof tzInfo === 'object' ? tzInfo.tz : tzInfo;
+                const isSplit = typeof tzInfo === 'object' ? tzInfo.split : false;
+
+                const update = () => {
+                    try {
+                        const now = new Date();
+                        const timeString = now.toLocaleTimeString('en-US', {
+                            timeZone: timeZone,
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true
+                        });
+                        timeEl.innerHTML = `${timeString} ${isSplit ? '<span style="color:var(--neon-amber); font-size:0.8em; margin-left:5px;" title="State has multiple timezones">⚠ (Split)</span>' : ''}`;
+                    } catch (e) {
+                        timeEl.textContent = 'Invalid TZ';
+                    }
+                };
+
+                update();
+                timeUpdateInterval = setInterval(update, 60000); // Update every minute
             }
 
             function formatPhone(phone) {
@@ -788,8 +859,10 @@
                 updateStats();
             });
 
-
-
+            document.getElementById('randomBtn').addEventListener('click', () => {
+                const randomIndex = Math.floor(Math.random() * csvData.length);
+                showLead(randomIndex);
+            });
             document.querySelectorAll('.disp-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const status = btn.dataset.status;
