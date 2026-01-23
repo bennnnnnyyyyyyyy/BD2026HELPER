@@ -242,6 +242,13 @@
         .dialer-panel.show {
             display: grid;
             grid-template-columns: 1fr 380px;
+            gap: 30px;
+        }
+
+        @media (max-width: 1100px) {
+            .dialer-panel.show {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* Lead Card */
@@ -420,6 +427,84 @@
             font-weight: bold;
         }
 
+        /* Utils Bar (Search & Sort) */
+        .utils-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: var(--void-light);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--void);
+            color: var(--text-primary);
+            font-family: inherit;
+        }
+
+        .filter-box {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--void);
+            color: var(--text-primary);
+            font-family: inherit;
+            cursor: pointer;
+            min-width: 140px;
+        }
+
+        .filter-select:hover {
+            border-color: var(--electric-blue);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--electric-blue);
+        }
+
+        .sort-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            padding: 10px 16px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--void);
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+
+        .btn-small:hover {
+            border-color: var(--electric-blue);
+            color: var(--electric-blue);
+        }
+
         .nav-btns {
             display: flex;
             gap: 12px;
@@ -545,6 +630,10 @@
                     <select id="mapCompany"></select>
                 </div>
                 <div class="mapper-item">
+                    <label>NPI</label>
+                    <select id="mapNpi"></select>
+                </div>
+                <div class="mapper-item">
                     <label>Comments (History)</label>
                     <select id="mapComments"></select>
                 </div>
@@ -555,7 +644,24 @@
         </div>
 
         <div class="dialer-panel" id="dialerPanel">
+
             <div class="lead-card">
+                <div class="utils-bar">
+                    <div class="search-box">
+                        <input type="text" id="phoneSearchInput" placeholder="Find by Phone Number...">
+                        <button id="phoneSearchBtn" class="btn-small" title="Search">🔎</button>
+                    </div>
+                    <div class="filter-box">
+                        <select id="filterState" class="filter-select">
+                            <option value="ALL">All States</option>
+                        </select>
+                        <select id="filterTimezone" class="filter-select">
+                            <option value="ALL">All Time Zones</option>
+                        </select>
+                        <button id="resetFiltersResult" class="btn-small" style="display:none;">Reset</button>
+                    </div>
+                </div>
+
                 <div class="lead-header">
                     <div>
                         <div class="lead-name" id="leadName">Loading...</div>
@@ -572,6 +678,10 @@
                     <div class="detail-item">
                         <label>Local Time</label>
                         <span id="leadTime">--</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>NPI</label>
+                        <span id="leadNPI">--</span>
                     </div>
                     <div class="detail-item" style="grid-column: 1 / -1;">
                         <label>Comment History</label>
@@ -618,10 +728,11 @@
 
         <script>
             let csvData = [];
+            let filteredIndices = []; // Stores indices of csvData that match current filter/search
+            let currentViewIndex = 0; // Index within filteredIndices
             let headers = [];
-            let currentIndex = 0;
 
-            let columnMap = { phone: 0, name: 1, company: 2, comments: -1 };
+            let columnMap = { phone: 0, name: 1, company: 2, comments: -1, npi: -1 };
             let stats = { total: 0, called: 0, connected: 0 };
             let timeUpdateInterval;
 
@@ -728,6 +839,10 @@
                     });
 
                     stats.total = csvData.length;
+
+                    // Initialize Filtered Indices (All)
+                    filteredIndices = csvData.map((_, i) => i);
+
                     updateStats();
                     showMapper();
                 };
@@ -743,7 +858,8 @@
                     'mapPhone': { candidates: ['AuthPhone', 'OfficePhone', 'Phone', 'Mobile', 'Cell'], avoid: [] },
                     'mapName': { candidates: ['AuthOfficialName', 'Opener', 'Name', 'Contact'], avoid: ['DUP'] },
                     'mapCompany': { candidates: ['Legalbusinessname', 'Company', 'Organization', 'Business'], avoid: [] },
-                    'mapComments': { candidates: ['Comments', 'Notes', 'History', 'Log'], avoid: [] }
+                    'mapComments': { candidates: ['Comments', 'Notes', 'History', 'Log'], avoid: [] },
+                    'mapNpi': { candidates: ['NPI', 'Provider ID', 'Number'], avoid: ['Phone'] }
                 };
 
                 const findBestMatch = (candidates, avoidList) => {
@@ -777,32 +893,57 @@
                     phone: +document.getElementById('mapPhone').value,
                     name: +document.getElementById('mapName').value,
                     company: +document.getElementById('mapCompany').value,
-                    comments: +document.getElementById('mapComments').value
+                    comments: +document.getElementById('mapComments').value,
+                    npi: +document.getElementById('mapNpi').value
                 };
+
+                populateFilters();
+
                 mapper.classList.remove('show');
                 dialerPanel.classList.add('show');
                 exportBar.classList.add('show');
+
+                // Show first lead of filtered list
                 showLead(0);
             });
 
-            function showLead(index) {
-                if (index < 0 || index >= csvData.length) return;
-                currentIndex = index;
-                const lead = csvData[index];
+            function showLead(viewIndex) {
+                // Bounds check
+                if (filteredIndices.length === 0) {
+                    // Handle empty state
+                    document.getElementById('leadName').textContent = 'No Leads Match Filter';
+                    document.getElementById('leadCompany').textContent = '';
+                    document.getElementById('leadPhone').innerHTML = '<span style="color:#666">--</span>';
+                    document.getElementById('leadIndex').textContent = '0 / 0';
+                    return;
+                }
+
+                if (viewIndex < 0) viewIndex = 0;
+                if (viewIndex >= filteredIndices.length) viewIndex = filteredIndices.length - 1;
+
+                currentViewIndex = viewIndex;
+                const originalIndex = filteredIndices[currentViewIndex];
+                const lead = csvData[originalIndex];
+
                 document.getElementById('leadName').textContent = headers[columnMap.name] ? lead[headers[columnMap.name]] : 'Unknown';
                 document.getElementById('leadCompany').textContent = headers[columnMap.company] ? lead[headers[columnMap.company]] : '';
                 document.getElementById('leadPhone').textContent = headers[columnMap.phone] ? formatPhone(lead[headers[columnMap.phone]]) : '--';
-                document.getElementById('leadState').textContent = lead._enriched.state || lead['State'] || '--';
+
+                const state = lead._enriched.state || lead['State'] || '--';
+                document.getElementById('leadState').textContent = state;
+                document.getElementById('leadNPI').textContent = headers[columnMap.npi] ? lead[headers[columnMap.npi]] : '--';
 
                 // Show Comments
                 const currentComments = columnMap.comments >= 0 ? lead[headers[columnMap.comments]] : '';
                 document.getElementById('leadComments').textContent = currentComments || 'No comments.';
 
-                document.getElementById('leadIndex').textContent = `${index + 1} / ${csvData.length}`;
+                document.getElementById('leadIndex').textContent = `${currentViewIndex + 1} / ${filteredIndices.length}`;
                 document.getElementById('notesInput').value = ''; // Always clear notes input for new lead
-                document.getElementById('progressText').textContent = `${stats.called} / ${stats.total} completed`;
 
-                updateTimeDisplay(lead._enriched.state || lead['State']);
+                // Use original stats for progress, or maybe filtered? For now let's show overall progress
+                document.getElementById('progressText').textContent = `${stats.called} / ${stats.total} total dialed`;
+
+                updateTimeDisplay(state);
             }
 
             function updateTimeDisplay(stateCode) {
@@ -851,7 +992,8 @@
             }
 
             document.getElementById('callBtn').addEventListener('click', () => {
-                const lead = csvData[currentIndex];
+                if (filteredIndices.length === 0) return;
+                const lead = csvData[filteredIndices[currentViewIndex]];
                 const phone = headers[columnMap.phone] ? lead[headers[columnMap.phone]] : '';
                 if (!phone) return alert('No phone number!');
                 window.open(`tel:${phone.replace(/\D/g, '')}`, '_blank');
@@ -860,8 +1002,9 @@
             });
 
             document.getElementById('randomBtn').addEventListener('click', () => {
-                const randomIndex = Math.floor(Math.random() * csvData.length);
-                showLead(randomIndex);
+                if (filteredIndices.length === 0) return;
+                const randomViewIndex = Math.floor(Math.random() * filteredIndices.length);
+                showLead(randomViewIndex);
             });
             document.querySelectorAll('.disp-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -872,17 +1015,19 @@
                     // Construct new note entry
                     const newEntry = `${status}${noteInput ? ' - ' + noteInput : ''} (${today})`;
 
+                    const originalIndex = filteredIndices[currentViewIndex];
+
                     // Append to existing comments
                     const commentCol = headers[columnMap.comments];
                     if (columnMap.comments >= 0 && commentCol) {
-                        const currentVal = csvData[currentIndex][commentCol] || '';
-                        csvData[currentIndex][commentCol] = currentVal ? currentVal + '\n' + newEntry : newEntry;
+                        const currentVal = csvData[originalIndex][commentCol] || '';
+                        csvData[originalIndex][commentCol] = currentVal ? currentVal + '\n' + newEntry : newEntry;
 
                         // Update UI
-                        document.getElementById('leadComments').textContent = csvData[currentIndex][commentCol];
+                        document.getElementById('leadComments').textContent = csvData[originalIndex][commentCol];
                     }
 
-                    csvData[currentIndex]._disposition = status; // Keep track of last action
+                    csvData[originalIndex]._disposition = status; // Keep track of last action
 
                     // Clear input and move next
                     document.getElementById('notesInput').value = '';
@@ -893,13 +1038,110 @@
                         // Reset button text based on status
                         const map = { 'VM': '📼 VM (Voicemail)', 'GK': '🛡️ GK (Gatekeeper)', 'NA': '🚫 NA (No Answer)', 'WN': '❌ WN (Wrong Number)', 'Custom': '📝 Custom Note' };
                         btn.textContent = map[status] || status;
-                        showLead(currentIndex + 1);
+                        showLead(currentViewIndex + 1);
                     }, 600);
                 });
             });
 
-            document.getElementById('prevBtn').addEventListener('click', () => showLead(currentIndex - 1));
-            document.getElementById('nextBtn').addEventListener('click', () => showLead(currentIndex + 1));
+            document.getElementById('prevBtn').addEventListener('click', () => showLead(currentViewIndex - 1));
+            document.getElementById('nextBtn').addEventListener('click', () => showLead(currentViewIndex + 1));
+
+            // --- Features: Filtering & Search ---
+
+            function populateFilters() {
+                const states = new Set();
+                const timezones = new Set();
+
+                csvData.forEach(lead => {
+                    const s = (lead._enriched.state || lead['State'] || '').toUpperCase().trim();
+                    if (s) states.add(s);
+
+                    const tzInfo = STATE_TIMEZONES[s];
+                    if (tzInfo) {
+                        const tz = typeof tzInfo === 'object' ? tzInfo.tz : tzInfo;
+                        // Simplified TZ Name
+                        const shortTz = tz.split('/')[1] || tz;
+                        timezones.add(shortTz.replace('_', ' '));
+                    }
+                });
+
+                const stateSelect = document.getElementById('filterState');
+                // Clear existing options (keep first)
+                while (stateSelect.options.length > 1) stateSelect.remove(1);
+
+                Array.from(states).sort().forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s;
+                    opt.textContent = s;
+                    stateSelect.appendChild(opt);
+                });
+
+                const tzSelect = document.getElementById('filterTimezone');
+                while (tzSelect.options.length > 1) tzSelect.remove(1);
+
+                Array.from(timezones).sort().forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t;
+                    opt.textContent = t;
+                    tzSelect.appendChild(opt);
+                });
+            }
+
+            function applyFilters() {
+                const sFilter = document.getElementById('filterState').value;
+                const tzFilter = document.getElementById('filterTimezone').value;
+                const phoneQuery = document.getElementById('phoneSearchInput').value.replace(/\D/g, '');
+
+                filteredIndices = [];
+
+                const phoneHeader = headers[columnMap.phone];
+
+                for (let i = 0; i < csvData.length; i++) {
+                    const item = csvData[i];
+                    const itemState = (item._enriched.state || item['State'] || '').toUpperCase().trim();
+
+                    // State Filter
+                    if (sFilter !== 'ALL' && itemState !== sFilter) continue;
+
+                    // TZ Filter
+                    if (tzFilter !== 'ALL') {
+                        const tzInfo = STATE_TIMEZONES[itemState];
+                        const itemTz = tzInfo ? (typeof tzInfo === 'object' ? tzInfo.tz : tzInfo) : '';
+                        const shortTz = (itemTz.split('/')[1] || '').replace('_', ' ');
+                        if (shortTz !== tzFilter) continue;
+                    }
+
+                    // Phone Search (acting as filter if present)
+                    if (phoneQuery) {
+                        const val = phoneHeader ? item[phoneHeader] : '';
+                        if (!val || !val.toString().replace(/\D/g, '').includes(phoneQuery)) continue;
+                    }
+
+                    filteredIndices.push(i);
+                }
+
+                currentViewIndex = 0;
+                showLead(0);
+
+                // Show reset button if filtered
+                const isFiltered = sFilter !== 'ALL' || tzFilter !== 'ALL' || phoneQuery;
+                document.getElementById('resetFiltersResult').style.display = isFiltered ? 'inline-block' : 'none';
+            }
+
+            document.getElementById('filterState').addEventListener('change', applyFilters);
+            document.getElementById('filterTimezone').addEventListener('change', applyFilters);
+
+            document.getElementById('phoneSearchBtn').addEventListener('click', applyFilters);
+            document.getElementById('phoneSearchInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') applyFilters();
+            });
+
+            document.getElementById('resetFiltersResult').addEventListener('click', () => {
+                document.getElementById('filterState').value = 'ALL';
+                document.getElementById('filterTimezone').value = 'ALL';
+                document.getElementById('phoneSearchInput').value = '';
+                applyFilters();
+            });
 
             function updateStats() {
                 document.getElementById('statTotal').textContent = stats.total;
