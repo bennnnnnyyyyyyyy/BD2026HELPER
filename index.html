@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NPI Tool Hub | Industrial</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --void: #0B0E14;
+            --void-light: #141820;
+            --void-lighter: #1F2937;
+            --steel: #9CA3AF;
+            --steel-dark: #6B7280;
+            --electric-blue: #0070FF;
+            --electric-blue-hover: #0057CC;
+            --neon-mint: #00D9A3;
+            --neon-red: #FF4444;
+            --neon-amber: #FFB82E;
+            --text-primary: #E5E7EB;
+            --text-secondary: #A3ACBE;
+            --border-color: #1F2937;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes pulse-pip {
+            0%, 100% { box-shadow: 0 0 4px rgba(0, 112, 255, 0.6), inset 0 0 2px rgba(0, 112, 255, 0.8); }
+            50% { box-shadow: 0 0 8px rgba(0, 112, 255, 0.9), inset 0 0 4px rgba(0, 112, 255, 1); }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Geist', sans-serif;
+            background-color: var(--void);
+            color: var(--text-primary);
+            min-height: 100vh;
+            background-image: 
+                linear-gradient(0deg, transparent 24%, rgba(31, 41, 55, 0.5) 25%, rgba(31, 41, 55, 0.5) 26%, transparent 27%, transparent 74%, rgba(31, 41, 55, 0.5) 75%, rgba(31, 41, 55, 0.5) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(31, 41, 55, 0.5) 25%, rgba(31, 41, 55, 0.5) 26%, transparent 27%, transparent 74%, rgba(31, 41, 55, 0.5) 75%, rgba(31, 41, 55, 0.5) 76%, transparent 77%, transparent);
+            background-size: 48px 48px;
+            animation: fadeIn 0.6s ease-out;
+            padding: 40px;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 50px; }
+        h1 { font-family: 'JetBrains Mono', monospace; color: var(--electric-blue); font-size: 2.5rem; text-shadow: 0 0 20px rgba(0, 112, 255, 0.3); margin-bottom: 10px; }
+        .subtitle { color: var(--text-secondary); font-size: 1.1rem; }
+
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; }
+        .tool-card {
+            background: var(--void-light);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .tool-card:hover { border-color: var(--electric-blue); transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0, 112, 255, 0.15); }
+        .tool-icon { font-size: 2rem; margin-bottom: 15px; width: 50px; height: 50px; background: var(--void-lighter); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .tool-title { font-size: 1.4rem; margin-bottom: 10px; color: var(--text-primary); }
+        
+        /* Forms */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        input, select {
+            width: 100%;
+            background: var(--void);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 10px;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+        input:focus, select:focus { outline: none; border-color: var(--electric-blue); }
+
+        .btn {
+            width: 100%;
+            background: var(--electric-blue);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+        .btn:hover:not(:disabled) { background: var(--electric-blue-hover); transform: translateY(-2px); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Progress Overlay */
+        #progressOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(11, 14, 20, 0.9);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .progress-container { width: 100%; max-width: 600px; }
+        .progress-bar-bg { background: var(--void-lighter); height: 12px; border-radius: 6px; overflow: hidden; margin-bottom: 15px; border: 1px solid var(--border-color); }
+        .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--electric-blue), var(--neon-mint)); transition: width 0.3s; }
+        .status-msg { margin-bottom: 20px; font-weight: 600; color: var(--neon-mint); font-family: 'JetBrains Mono', monospace; }
+        .log-box {
+            width: 100%; max-width: 600px; height: 300px;
+            background: var(--void-light);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏥 DME NPI Tool Hub</h1>
+            <p class="subtitle">Unified Industrial Interface for NPPES Data Management</p>
+        </header>
+
+        <div class="tools-grid">
+            <!-- Filter & Extract Tool -->
+            <div class="tool-card">
+                <div class="tool-icon">🔍</div>
+                <h2 class="tool-title">Filter & Extract</h2>
+                <div class="form-group">
+                    <label>State (e.g. CA, NY)</label>
+                    <input type="text" id="filterState" placeholder="ALL">
+                </div>
+                <div class="form-group">
+                    <label>Last Update (Start - MM/DD/YYYY)</label>
+                    <input type="text" id="filterUpdateStart" placeholder="Earliest">
+                </div>
+                <div class="form-group">
+                    <label>Last Update (End - MM/DD/YYYY)</label>
+                    <input type="text" id="filterUpdateEnd" placeholder="Latest">
+                </div>
+                <div class="form-group">
+                    <label>Taxonomy Codes (Comma separated)</label>
+                    <input type="text" id="filterTax" placeholder="e.g. 332B00000X">
+                </div>
+                <button class="btn" onclick="runFilter()">Run Extraction</button>
+            </div>
+
+            <!-- Merger Tool -->
+            <div class="tool-card">
+                <div class="tool-icon">🔗</div>
+                <h2 class="tool-title">NPI CSV Merger</h2>
+                <div class="form-group">
+                    <label>Priority File (File 1)</label>
+                    <select id="mergeFile1">
+                        {% for file in csv_files %}
+                            <option value="{{ file }}">{{ file }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Merge With (File 2)</label>
+                    <select id="mergeFile2">
+                        {% for file in csv_files %}
+                            <option value="{{ file }}">{{ file }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button class="btn" onclick="runMerge()">Merge Files</button>
+            </div>
+
+            <!-- Formatter Tool -->
+            <div class="tool-card">
+                <div class="tool-icon">📋</div>
+                <h2 class="tool-title">Sheet Formatter</h2>
+                <div class="form-group">
+                    <label>Select Source CSV</label>
+                    <select id="formatFile">
+                        {% for file in csv_files %}
+                            <option value="{{ file }}">{{ file }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px;">
+                    Prepares data for Google Sheets upload. Merges official names and reorders columns.
+                </p>
+                <button class="btn" onclick="runFormat()">Format for Sheet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress UI -->
+    <div id="progressOverlay">
+        <div class="progress-container">
+            <div class="status-msg" id="statusMsg">Initializing...</div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressFill"></div>
+            </div>
+        </div>
+        <div class="log-box" id="logBox"></div>
+        <div id="completionActions" style="display: none; margin-top: 20px;">
+            <button class="btn" style="width: auto; padding: 12px 30px;" id="downloadBtn">Download Result</button>
+            <button class="btn" style="width: auto; padding: 12px 30px; background: var(--void-lighter);" onclick="closeProgress()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        let pollingInterval = null;
+
+        function showProgress() {
+            document.getElementById('progressOverlay').style.display = 'flex';
+            document.getElementById('completionActions').style.display = 'none';
+            document.getElementById('logBox').innerHTML = '';
+            document.getElementById('progressFill').style.width = '0%';
+            startPolling();
+        }
+
+        function closeProgress() {
+            document.getElementById('progressOverlay').style.display = 'none';
+            stopPolling();
+        }
+
+        function startPolling() {
+            if (pollingInterval) clearInterval(pollingInterval);
+            pollingInterval = setInterval(async () => {
+                const res = await fetch('/api/progress');
+                const data = await res.json();
+                
+                document.getElementById('statusMsg').innerText = data.message;
+                document.getElementById('progressFill').style.width = data.percent + '%';
+                
+                const logBox = document.getElementById('logBox');
+                logBox.innerHTML = data.log.join('<br>');
+                logBox.scrollTop = logBox.scrollHeight;
+
+                if (data.status === 'complete') {
+                    stopPolling();
+                    document.getElementById('completionActions').style.display = 'block';
+                    document.getElementById('downloadBtn').onclick = () => {
+                        window.location.href = `/api/download/${data.result_file}`;
+                    };
+                } else if (data.status === 'error') {
+                    stopPolling();
+                    document.getElementById('completionActions').style.display = 'block';
+                    document.getElementById('downloadBtn').style.display = 'none';
+                }
+            }, 1000);
+        }
+
+        function stopPolling() {
+            if (pollingInterval) clearInterval(pollingInterval);
+        }
+
+        async function runFilter() {
+            const body = {
+                state: document.getElementById('filterState').value,
+                update_start: document.getElementById('filterUpdateStart').value,
+                update_end: document.getElementById('filterUpdateEnd').value,
+                taxonomies: document.getElementById('filterTax').value
+            };
+            showProgress();
+            await fetch('/api/filter', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(body)
+            });
+        }
+
+        async function runMerge() {
+            const body = {
+                file1: document.getElementById('mergeFile1').value,
+                file2: document.getElementById('mergeFile2').value
+            };
+            showProgress();
+            await fetch('/api/merge', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(body)
+            });
+        }
+
+        async function runFormat() {
+            const body = {
+                file: document.getElementById('formatFile').value
+            };
+            showProgress();
+            await fetch('/api/format', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(body)
+            });
+        }
+    </script>
+</body>
+</html>
