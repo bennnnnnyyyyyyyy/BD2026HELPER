@@ -1,57 +1,66 @@
 # 🏥 Ben's DME Data Hub
 
-> **A professional, standalone suite for DME outreach, NPI enrichment, and data management.**  
-> *Built for speed, privacy, and zero-setup deployment.*
+> **A professional suite for DME outreach, NPI enrichment, and advanced data management.**  
+> *Built for speed, industrial aesthetics, and robust local processing.*
 
 ---
 
 ## 🚀 Quick Start
 
-1.  **Download** the entire folder.
-2.  Double-click **`homepage.html`**.
-3.  That's it! Access all tools from the dashboard.
+1.  **Open Dashboard**: Double-click **`homepage.html`**.
+2.  **Basic Tools**: Launch the Power Dialer or Search Engine directly from the cards.
+3.  **Advanced Tools (NPI Hub)**: 
+    - Open a terminal in the folder containing `npi_hub.py`.
+    - Run: `python npi_hub.py`
+    - Click **"Launch NPI Hub"** on the dashboard.
 
 ---
 
 ## 🛠️ The Toolkit
 
 ### 1. 📞 Power Dialer (`dialer.html`)
-A high-velocity calling interface designed for sales teams.
+A high-velocity calling interface designed for sales efficiency.
 -   **CSV Import**: Drag & drop your lead list.
--   **Smart Mapping**: Automatically finds columns like `AuthPhone`, `Legalbusinessname`, and `Comments`.
--   **Disposition Buttons**: One-click logging for **VM**, **GK**, **NA**, **WN**, or **Custom Notes**.
--   **History Tracking**: Appends new notes to existing comments with timestamps (e.g., `VM - Left msg (1/15/2026)`).
--   **Export**: Saves your work to a new CSV with full history.
+-   **Smart Mapping**: Auto-identifies `AuthPhone`, `Legalbusinessname`, and `Comments`.
+-   **Disposition Logging**: One-click updates for **VM**, **GK**, **NA**, **WN**, or **Notes**.
+-   **History**: Appends timestamped notes to existing comments.
 
 ### 2. 📊 NPI Data Enrichment
-Bulk enrich your lead lists using a master NPPES database file.
--   **Offline Processing**: Uses a local reference file (no API limits).
--   **Matching Logic**: Matches by **NPI**, **Name + State**, or **Phone Number**.
--   **Fills Gaps**: Automatically populates `AuthOfficialName`, `AuthPhone`, and `NPI`.
+Bulk enrich your lead lists using local reference data.
+-   **Matching Logic**: Matches by NPI, Name + State, or Phone.
+-   **Automated**: Populates `AuthOfficialName`, `AuthPhone`, and `NPI` instantly.
 
 ### 3. 🔍 NPI Search Engine
-A real-time, blazing fast search interface for the NPPES database.
--   **Instant Search**: Type to filter thousands of records instantly.
--   **Advanced Filters**: Filter by State, Taxonomy, or Missing Info.
--   **Export**: Select specific rows and export to CSV/JSON.
--   **Portability**: Integrated directly into the homepage—no extra tabs needed.
+A blazing-fast search interface for exploring the NPPES registry.
+-   **Instant Filter**: Search thousands of records as you type.
+-   **Advanced View**: Detailed modal views for every provider.
+-   **Export**: Quick export to CSV/JSON format.
+
+### 4. 🛠️ NPI Tool Hub (`npi_hub.py`)
+A unified backend suite for heavy data processing.
+-   **Background Processing**: Handles massive CSVs without freezing your browser.
+-   **NPPES Extraction**: Filters millions of records directly from the NPPES ZIP file.
+-   **Multi-CSV Merger**: Combines lead lists and removes duplicates safely.
+-   **Sheet Formatter**: Prepares data for seamless Google Sheets upload.
 
 ---
 
 ## 📂 File Structure
 
--   **`homepage.html`**: The main entry point. Contains the Dashboard, Enrichment Tool, and Search Engine.
--   **`dialer.html`**: The standalone calling application (launchable from homepage).
--   **`README.md`**: This file.
+-   **`homepage.html`**: The central dashboard hub.
+-   **`dialer.html`**: Standalone calling application.
+-   **`npi_hub.py`**: Flask backend server for advanced tools.
+-   **`templates/index.html`**: NPI Hub interface.
+-   **`README.md`**: This guide.
 
 ---
 
 ## 💡 Pro Tips
 
--   **Privacy First**: All data processing happens **locally** in your browser. No data is ever sent to a server.
--   **Performance**: For best results in the Search/Enrichment tools, ensure your computer has enough RAM to handle large CSVs.
--   **Save Often**: When using the Dialer, export your CSV periodically to save your progress.
+-   **Local & Secure**: All processing happens on your machine. No data is sent to external servers.
+-   **Requirements**: The NPI Hub requires Python (with `flask` and `pandas` installed).
+-   **Save Progress**: Periodically export your CSVs in the Dialer to ensure your work is saved.
 
 ---
 
-*internal use only • v2.1.0 • 2026*
+*internal use only • v2.2.0 • 2026*
